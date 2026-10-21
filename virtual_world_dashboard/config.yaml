@@ -1,6 +1,6 @@
 name: "Virtual World Dashboard"
 description: "WordPress-based middleware gateway between AI (GPTs) and Home Assistant."
-version: "1.0.5"
+version: "1.0.6"
 slug: "virtual_world_dashboard"
 init: false
 arch:

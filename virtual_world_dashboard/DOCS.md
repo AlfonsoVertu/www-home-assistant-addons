@@ -81,3 +81,14 @@ Plugin **Virtual World Gate Key** e integrazione sviluppati da [Alfonso Vertucci
 
 Versione completa con automazione AI avanzata: [WP GPT Automation Pro](https://workingwithweb.it/webagency/gestisci-wordpress-da-chatgpt-wp-gpt-automation-pro/)
 Progetto Virtual Gate: [virtualgate.workingwithweb.eu](https://virtualgate.workingwithweb.eu/)
+
+## Licenza di WP GPT Automation Free
+
+Il plugin è gratuito ma vuole una licenza, legata al dominio del sito (`wp_domain`). Si ottiene così:
+
+1. apri [WP GPT Automation Free](https://workingwithweb.it/webagency/prodotto/wp-gpt-automation-free/) su Working With Web e mettilo nel carrello: costa 0 €;
+2. completa l'ordine (se non hai un account lo crei lì, con la tua email);
+3. il sistema delle licenze crea la chiave appena l'ordine è completato: la trovi in [Il mio account › Le mie licenze](https://workingwithweb.it/webagency/mio-account/le-mie-licenze/) e nell'email dell'ordine;
+4. copia la chiave nell'opzione `wp_gpt_license_key` di questo add-on e riavvialo: la licenza si lega da sola al primo sito che la usa (il dominio di `wp_domain`) e da lì vale solo per lui.
+
+A ogni avvio l'add-on scrive la chiave nel sito: cambiarla dalla bacheca di WordPress non basta, va cambiata qui.

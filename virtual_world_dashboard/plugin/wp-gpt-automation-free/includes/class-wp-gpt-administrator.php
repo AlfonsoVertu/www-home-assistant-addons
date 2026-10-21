@@ -115,14 +115,13 @@ class WP_GPT_Custom_Admin_Settings {
 // Funzione per verificare la licenza con il server centrale
 private static function verify_license_with_server($license_key, $domain, $request_type = 'unknown') {
     error_log('DEBUG: Inizio verifica licenza con server. Richiesta via: ' . $request_type);
-    error_log('DEBUG: Licenza: ' . $license_key . ' - Dominio: ' . $domain);
+    error_log('DEBUG: Dominio: ' . $domain); // (21/10/2026) la chiave di licenza non si scrive nel log
 
     // Definisci l'URL dell'API del server di aggiornamento
     $api_url = 'https://workingwithweb.it/webagency/wp-json/plugin-updater/v1/check_version';
     
     // Log per la richiesta
     error_log('DEBUG: URL API: ' . $api_url);
-    error_log('DEBUG: Corpo della richiesta: ' . json_encode(['license_key' => $license_key, 'domain' => $domain]));
 
     // Definisci gli argomenti per la richiesta wp_remote_post
     $args = array(
@@ -279,7 +278,16 @@ private static function verify_license_with_server($license_key, $domain, $reque
     public static function render_license_key_field() {
         $license_key = get_option('wp_gpt_license_key', '');
         echo '<input type="text" name="wp_gpt_license_key" value="' . esc_attr($license_key) . '" class="regular-text" />';
-        echo '<p class="description">' . esc_html__('Inserisci la chiave di licenza fornita per attivare il plugin.', 'wp-gpt-automation-pro') . '</p>';
+        // (21/10/2026) come si ottiene la licenza: la rilascia il gestore delle licenze di Working With Web quando ti registri
+        // e «acquisti» (a 0 euro) WP GPT Automation Free; vale per il dominio di questo sito
+        echo '<p class="description">' . esc_html__('Inserisci la chiave di licenza per attivare il plugin.', 'wp-gpt-automation-pro') . '</p>';
+        echo '<div class="wp-gpt-come-licenza" style="max-width:760px;margin-top:10px;padding:12px 14px;border-left:4px solid #2271b1;background:#f0f6fc">';
+        echo '<strong>' . esc_html__('Come ottieni la licenza (gratis)', 'wp-gpt-automation-pro') . '</strong><ol style="margin:8px 0 0 18px">';
+        echo '<li>' . sprintf(esc_html__('Apri %s e premi «Aggiungi al carrello»: costa 0 €.', 'wp-gpt-automation-pro'), '<a href="' . esc_url('https://workingwithweb.it/webagency/prodotto/wp-gpt-automation-free/') . '" target="_blank" rel="noopener">WP GPT Automation Free</a>') . '</li>';
+        echo '<li>' . esc_html__('Completa l\'ordine: se non hai un account su Working With Web lo crei lì, con la tua email.', 'wp-gpt-automation-pro') . '</li>';
+        echo '<li>' . sprintf(esc_html__('Il sistema delle licenze crea la tua chiave appena l\'ordine è completato: la trovi in %s (e nell\'email dell\'ordine).', 'wp-gpt-automation-pro'), '<a href="' . esc_url('https://workingwithweb.it/webagency/mio-account/le-mie-licenze/') . '" target="_blank" rel="noopener">' . esc_html__('Il mio account › Le mie licenze', 'wp-gpt-automation-pro') . '</a>') . '</li>';
+        echo '<li>' . sprintf(esc_html__('Copia la chiave qui sopra e salva: la licenza si lega da sola al primo sito che la usa, cioè questo (%s), e da lì vale solo per lui.', 'wp-gpt-automation-pro'), '<code>' . esc_html((string) parse_url(site_url(), PHP_URL_HOST)) . '</code>') . '</li>';
+        echo '</ol><p style="margin:8px 0 0">' . esc_html__('Se il sito è la dashboard di casa installata in Home Assistant, metti la chiave nelle opzioni dell\'add-on (wp_gpt_license_key): a ogni avvio l\'add-on la riscrive qui.', 'wp-gpt-automation-pro') . '</p></div>';
     }
 
     public static function render_license_page() {
