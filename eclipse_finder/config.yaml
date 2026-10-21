@@ -1,0 +1,64 @@
+name: Eclipse Finder
+version: "0.31.5"
+slug: eclipse_finder
+description: Prevede la prossima eclissi e da quale finestra/balcone di casa si vede meglio, con overlay sulla foto della vista
+arch:
+  - amd64
+  - aarch64
+  - armv7
+  - i386
+init: false
+ingress: true
+ingress_port: 8099
+panel_icon: mdi:weather-night-partly-cloudy
+panel_title: Eclissi
+hassio_api: true
+homeassistant_api: true
+# (0.31) la cartella di configurazione di HA (montata in /homeassistant): ci si copia la card «Casa viva» (www/eclipse)
+map:
+  - type: homeassistant_config
+    read_only: false
+options:
+  # QUANTO E' GRANDE LA TELA, IN BLOCCHI DELLA GRIGLIA.
+  #
+  # Si dichiara in blocchi e non in punti perche' e' cosi' che la si guarda
+  # mentre si disegna: la griglia ha il passo fisso e le stanze ci si
+  # agganciano. Chiedere i punti vorrebbe dire far fare una moltiplicazione a
+  # chi vuole solo due quadretti in piu'.
+  #
+  # 22 x 15 e' due blocchi piu' della vecchia misura fissa, che stava stretta
+  # appena una casa aveva un balcone o un corridoio lungo.
+  griglia_colonne: 22
+  griglia_righe: 15
+  api_key: ""
+  # (0.26) IL PORTALE DEL GIOCO Another Wilde Web: da qui Eclipse prende il tuo avatar (entri con l'account del
+  # gioco dalla casa 3D, «Il mio avatar»). Di serie quello pubblico.
+  gioco_url: "https://gioca.workingwithweb.eu"
+  # (0.26, Alfonso: «nella configurazione possiamo aggiungere i dati di login dell'account») il tuo account del gioco:
+  # se ci sono, Eclipse entra da solo (all'avvio e quando il gettone scade) e non chiede niente nella casa 3D.
+  # Vuoti = si entra a mano da «Il mio avatar»
+  gioco_nome: ""
+  gioco_password: ""
+  # (0.27) CASA VIVA: gemello delle stanze, scene, abitudini (sezione «Casa viva» della pagina). Spenta = nessuna
+  # chiamata a Home Assistant da quella parte.
+  casa_viva: true
+  # Gli automatismi che agiscono DA SOLI vanno accesi qui, oltre che nella pagina: abbassare le casse quando parla una
+  # voce, e l'allarme rosso (luci rosse lampeggianti e annuncio quando un sensore di fumo, gas o acqua scatta).
+  volume_automatico: false
+  allarme_automatico: false
+  # (0.28) IL MIO AVATAR: con chi parla (l'agente di conversazione di HA: vuoto = quello predefinito, Assist) e con
+  # che voce (un'entità tts.*: vuoto = il primo motore TTS di HA che risponde). La voce suona solo nella pagina.
+  avatar_agente: ""
+  avatar_tts: ""
+schema:
+  griglia_colonne: int(10,60)
+  griglia_righe: int(8,40)
+  api_key: "str?"
+  gioco_url: "url?"
+  gioco_nome: "str?"
+  gioco_password: "password?"
+  casa_viva: bool
+  volume_automatico: bool
+  allarme_automatico: bool
+  avatar_agente: "str?"
+  avatar_tts: "str?"

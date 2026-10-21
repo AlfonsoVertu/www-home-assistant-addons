@@ -1,0 +1,3685 @@
+{
+ "/v1/retrieve-price-and-information-for-crypto-coin-dexscreener/": {
+  "post": {
+   "summary": "Ottieni informazioni sui prezzi e dettagli delle criptovalute utilizzando DEX Screener",
+   "description": "",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "action": {
+      "description": "Azione da eseguire. - `latest-token-profiles` non richiede altri parametri. - `boosted-tokens` e `top-boosts` non richiedono parametri. - `token-orders` richiede `chain_id` e `token_address`. - `pairs-by-token` richiede `token_address`. - `pairs-by-chain` richiede `chain_id` e `pair_id`. - `search-pairs` richiede `query`. - `secure_analytics_on_crypto_token` richiede `query` o `token_address`.\n",
+      "example": "pairs-by-token",
+      "type": "string"
+     },
+     "chain_id": {
+      "description": "Identificativo della blockchain. Necessario per action come `pairs-by-chain` o `token-orders`. Ad esempio, \"ethereum\" o \"solana\".\n",
+      "example": "ethereum",
+      "type": "string"
+     },
+     "chunk_index": {
+      "default": 0,
+      "description": "Indice del chunk da recuperare nel caso in cui i dati siano suddivisi in blocchi di grandi dimensioni. Usare 0 per ottenere il primo chunk.\n",
+      "example": 0,
+      "type": "integer"
+     },
+     "pair_id": {
+      "description": "Identificativo specifico della coppia di mercato. Necessario per action `pairs-by-chain` per identificare la coppia desiderata.\n",
+      "example": "0xabcdef1234567890",
+      "type": "string"
+     },
+     "query": {
+      "description": "Query di ricerca per action come `search-pairs`. Consente di cercare coppie di mercato basate su stringhe testuali.\n",
+      "example": "bitcoin",
+      "type": "string"
+     },
+     "token_address": {
+      "description": "Indirizzo del token richiesto. Necessario per action come `pairs-by-token`  o `token-orders` or 'secure_analytics_on_crypto_token'. Deve essere fornito nel formato esadecimale corretto or.\n",
+      "example": "0x123456789abcdef",
+      "type": "string"
+     },
+     "user_code": {
+      "description": "Codice univoco dell'utente richiesto per autorizzare e verificare la richiesta. Deve essere fornito in un formato valido.\n",
+      "example": "abcd1234efgh5678ijkl",
+      "type": "string"
+     }
+    },
+    "required": [
+     "action",
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/search-posts/": {
+  "get": {
+   "summary": "Cerca post esistenti",
+   "description": "",
+   "parameters": [
+    {
+     "name": "search",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Termini di ricerca da utilizzare per cercare i post"
+    },
+    {
+     "name": "post_type",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Tipo di post da cercare (es. post, page)"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Numero massimo di post da restituire"
+    }
+   ],
+   "body": {}
+  }
+ },
+ "/v1/search-youtube-video/": {
+  "post": {
+   "summary": "Cerca video su YouTube",
+   "description": "",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "query": {
+      "description": "Termine di ricerca per i video",
+      "type": "string"
+     },
+     "user_code": {
+      "description": "Codice utente salvato nelle impostazioni del plugin",
+      "type": "string"
+     }
+    },
+    "required": [
+     "query",
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/manage-email-multiple-action": {
+  "post": {
+   "summary": "Gestisce invii multipli, consultazione invii/ricezioni email e chunk transitori.",
+   "description": "Supporta le action send, list-sended-email, read-sended-email, list-recived-email, read-recived-email e gestione dei transient con paginazione e modalità passiva.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "action": {
+      "type": "string",
+      "enum": [
+       "send",
+       "list-sended-email",
+       "read-sended-email",
+       "list-recived-email",
+       "read-recived-email",
+       "get_email_transient_list",
+       "get_email_transient_chunk"
+      ],
+      "description": "Azione da eseguire. `send` richiede `user_code`, `subject`, `message` e almeno uno tra `to`/`cc`/`bcc`."
+     },
+     "user_code": {
+      "type": "string",
+      "description": "Obbligatorio per `send`, `list-sended-email` e `read-sended-email`."
+     },
+     "to": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "format": "email"
+      },
+      "description": "Destinatari TO per `send`; ogni indirizzo crea un batch dedicato."
+     },
+     "cc": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "format": "email"
+      },
+      "description": "Destinatari CC per `send`; mantengono le intestazioni visibili."
+     },
+     "bcc": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "format": "email"
+      },
+      "description": "Destinatari BCC per `send`; ogni batch resta isolato."
+     },
+     "subject": {
+      "type": "string",
+      "description": "Oggetto richiesto per `send`."
+     },
+     "message": {
+      "type": "string",
+      "description": "Corpo HTML/testo richiesto per `send`."
+     },
+     "from": {
+      "type": "string",
+      "format": "email",
+      "description": "Mittente opzionale per `send`."
+     },
+     "server": {
+      "type": "string",
+      "description": "Host SMTP/IMAP per `send`, `list-recived-email` e `read-recived-email` se non si usa la modalità passiva."
+     },
+     "port": {
+      "type": "integer",
+      "description": "Porta SMTP/IMAP per `send`, `list-recived-email`, `read-recived-email`."
+     },
+     "username": {
+      "type": "string",
+      "description": "Username casella richiesto quando la modalità passiva è disattiva (`send`, `list-recived-email`, `read-recived-email`)."
+     },
+     "password": {
+      "type": "string",
+      "description": "Password casella per le stesse azioni che richiedono `username`."
+     },
+     "server_receive": {
+      "type": "string",
+      "description": "Override del server IMAP salvato per `list-recived-email` e `read-recived-email`."
+     },
+     "port_receive": {
+      "type": "integer",
+      "description": "Override della porta IMAP salvata per `list-recived-email` e `read-recived-email`."
+     },
+     "mailbox": {
+      "type": "string",
+      "description": "Cartella IMAP (`list-recived-email`, `read-recived-email`), default `INBOX`."
+     },
+     "limit": {
+      "type": "integer",
+      "description": "Risultati per pagina in `list-sended-email` e `list-recived-email` (max 100)."
+     },
+     "page": {
+      "type": "integer",
+      "description": "Indice pagina (>=1) per `list-sended-email` e `list-recived-email`."
+     },
+     "step_id": {
+      "type": "integer",
+      "description": "ID dello step da leggere per `read-sended-email`."
+     },
+     "message_id": {
+      "type": "integer",
+      "description": "Messaggio IMAP da leggere con `read-recived-email`."
+     },
+     "transient_key": {
+      "type": "string",
+      "description": "Chiave del transient per `get_email_transient_chunk`."
+     },
+     "chunk_index": {
+      "type": "integer",
+      "description": "Indice pagina/segmento per `get_email_transient_list` e `get_email_transient_chunk`."
+     }
+    },
+    "required": [
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/ssh-connection": {
+  "post": {
+   "summary": "Gestisce comandi SSH con output a chunk",
+   "description": "Endpoint multi-azione per avviare comandi remoti, leggere output chunked e gestire i transient. Con la modalità passiva attiva `host`, `port`, `username` e `password` sono opzionali; supporta anche `private_key` con `private_key_passphrase`.\n",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente configurato nel backend del plugin."
+     },
+     "action": {
+      "type": "string",
+      "description": "Azione da eseguire. * `ssh-connection` richiede `command` e un metodo di autenticazione (`password` o `private_key` con eventuale `private_key_passphrase`). * `get_ssh_connection_response_list_in_chunk` elenca i transient salvati (`chunk_index` opzionale). * `get_ssh_connection_single_response_in_chunk` recupera un chunk specifico (`transient_key` + `chunk_index`). * `delete_ssh_connection_transients` elimina tutti i transient creati.\n",
+      "enum": [
+       "ssh-connection",
+       "get_ssh_connection_response_list_in_chunk",
+       "get_ssh_connection_single_response_in_chunk",
+       "delete_ssh_connection_transients"
+      ]
+     },
+     "command": {
+      "type": "string",
+      "description": "Comando da eseguire (richiesto per `ssh-connection`).",
+      "example": "journalctl -u nginx --no-pager | tail -n 100"
+     },
+     "host": {
+      "type": "string",
+      "description": "Host/IP della macchina remota."
+     },
+     "port": {
+      "type": "integer",
+      "default": 22,
+      "description": "Porta SSH della macchina remota."
+     },
+     "username": {
+      "type": "string",
+      "description": "Username SSH. Può essere omesso con modalità passiva attiva."
+     },
+     "password": {
+      "type": "string",
+      "description": "Password SSH per `ssh-connection`. Omettere se si usa la modalità passiva o `private_key`."
+     },
+     "private_key": {
+      "type": "string",
+      "description": "Chiave privata PEM per autenticare `ssh-connection` senza password."
+     },
+     "private_key_passphrase": {
+      "type": "string",
+      "description": "Passphrase della chiave privata (`ssh-connection`)."
+     },
+     "chunk_index": {
+      "type": "integer",
+      "description": "Indice del chunk da recuperare o dell'elenco.",
+      "example": 0
+     },
+     "transient_key": {
+      "type": "string",
+      "description": "Chiave transient restituita dal comando.",
+      "example": "ssh_response_64f2a1c9d40ef"
+     }
+    },
+    "required": [
+     "action",
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/ssh-connection-advanced-command": {
+  "post": {
+   "summary": "Gestisce operazioni SSH avanzate (creazione, modifica, lettura file e directory)",
+   "description": "Endpoint multi-azione basato su job locali WordPress (Action Scheduler). Se il job termina entro 10 secondi restituisce l'output finale; altrimenti restituisce `job_id` da interrogare con `action=get-job-status`. Con modalità passiva attiva `host`, `port`, `username` e `password` sono opzionali; è supportata anche `private_key` con relativa passphrase.\n",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice personale necessario per superare la validazione dell'endpoint."
+     },
+     "action": {
+      "description": "Tipo di operazione. * `custom-command` crea/esegue un job SSH remoto. * `upload-file-to-path` esegue upload locale file refs. * `get-job-status` legge stato/output di un job già creato.\n",
+      "type": "string",
+      "enum": [
+       "upload-file-to-path",
+       "custom-command",
+       "get-job-status"
+      ]
+     },
+     "command": {
+      "type": "string",
+      "description": "Comando shell remoto (`custom-command`)."
+     },
+     "job_id": {
+      "type": "string",
+      "description": "ID job da interrogare con `get-job-status`."
+     },
+     "openaiFileIdRefs": {
+      "type": "array",
+      "description": "Lista di riferimenti OpenAI da scaricare e copiare sul server (`upload-file-to-path`).",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "mime_type": {
+         "type": "string"
+        },
+        "download_link": {
+         "type": "string",
+         "format": "uri"
+        }
+       }
+      }
+     },
+     "host": {
+      "description": "Host remoto. Se la modalità passiva è attiva e il valore è salvato nella pagina **SSH Connections**, può essere omesso.\n",
+      "type": "string"
+     },
+     "password": {
+      "description": "Password SSH per qualunque azione. Omessa quando la modalità passiva è attiva o si invia `private_key`.\n",
+      "type": "string"
+     },
+     "target_directory": {
+      "type": "string",
+      "description": "Directory locale (assoluta o relativa ad ABSPATH) in cui spostare i file (`upload-file-to-path`)."
+     },
+     "target_filename": {
+      "type": "string",
+      "description": "Nome finale opzionale del file quando si usa `upload-file-to-path`."
+     },
+     "overwrite": {
+      "type": "boolean",
+      "description": "Indica se sovrascrivere file esistenti nella destinazione (`upload-file-to-path`)."
+     },
+     "port": {
+      "description": "Porta SSH; viene usata quella salvata in **SSH Connections** quando la modalità passiva è attiva.",
+      "type": "integer",
+      "default": 22
+     },
+     "username": {
+      "description": "Username SSH. Necessario solo se non configurato nella pagina di backend e la modalità passiva non è attiva.\n",
+      "type": "string"
+     },
+     "private_key": {
+      "description": "Chiave privata PEM utilizzabile al posto della password per tutte le azioni.",
+      "type": "string"
+     },
+     "private_key_passphrase": {
+      "description": "Passphrase opzionale della chiave privata (tutte le azioni).",
+      "type": "string"
+     }
+    },
+    "required": [
+     "action",
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/youtube-transcription/": {
+  "post": {
+   "summary": "Richiedi la trascrizione di un video YouTube e gestisci i chunk",
+   "description": "",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "chunk_index": {
+      "description": "Indice del chunk di trascrizione da recuperare. Ogni chunk contiene fino a 2000 caratteri.",
+      "example": 0,
+      "type": "integer"
+     },
+     "video_url": {
+      "description": "URL del video YouTube per cui si desidera ottenere la trascrizione.",
+      "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "format": "uri",
+      "type": "string"
+     }
+    },
+    "required": [
+     "video_url",
+     "chunk_index"
+    ]
+   }
+  }
+ },
+ "/v1/route-scheduler": {
+  "post": {
+   "summary": "Gestisce la pianificazione delle rotte",
+   "description": "Crea, aggiorna ed esegue job pianificati per altre rotte del plugin, propagando automaticamente lo user_code fornito e il token Bearer salvato nel sito all'interno delle chiamate schedulate.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "action": {
+      "description": "Azione da eseguire: `add_job` (richiede `job_key` e `definition`), `remove_job`, `run_job` e `get_log` (richiedono `job_key`), `set_logging` (richiede `logging` booleano) oppure `list_jobs` (nessun parametro aggiuntivo).",
+      "enum": [
+       "add_job",
+       "remove_job",
+       "list_jobs",
+       "run_job",
+       "get_log",
+       "set_logging"
+      ],
+      "type": "string"
+     },
+     "user_code": {
+      "description": "Codice utente obbligatorio per tutte le azioni; viene anche copiato nel payload del job se assente.",
+      "type": "string"
+     },
+     "job_key": {
+      "description": "Identificativo univoco del job richiesto da `add_job`, `remove_job`, `run_job` e `get_log`.",
+      "type": "string"
+     },
+     "definition": {
+      "description": "Oggetto richiesto per `add_job` con `target_route`, `payload` (array) e `schedule`. Il plugin aggiunge automaticamente lo `user_code` mancante e memorizza l'header `Authorization`.",
+      "type": "object"
+     },
+     "logging": {
+      "description": "Flag booleano richiesto da `set_logging`.",
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "action",
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/elementor-meta-tools": {
+  "post": {
+   "summary": "Gestisce i meta dei post creati con Elementor",
+   "description": "Endpoint che utilizza le opzioni wp_gpt_api_token e wp_gpt_user_code per l'autenticazione",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice univoco salvato in WP (wp_gpt_user_code)",
+      "type": "string"
+     },
+     "action": {
+      "description": "Azione da eseguire (list-meta o replace-meta-content)",
+      "enum": [
+       "list-meta",
+       "replace-meta-content"
+      ],
+      "type": "string"
+     },
+     "post_id": {
+      "description": "ID del post o pagina",
+      "type": "integer"
+     },
+     "meta_key": {
+      "description": "Meta key su cui filtrare o modificare",
+      "type": "string"
+     },
+     "search": {
+      "description": "Testo da cercare (per replace)",
+      "type": "string"
+     },
+     "replace": {
+      "description": "Testo con cui sostituire",
+      "type": "string"
+     },
+     "chunk_index": {
+      "description": "Indice del chunk da recuperare (default 0)",
+      "type": "integer"
+     },
+     "debug": {
+      "description": "Se true aggiunge info di debug",
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "user_code",
+     "action",
+     "post_id"
+    ]
+   }
+  }
+ },
+ "/v1/shortcode": {
+  "post": {
+   "summary": "Gestione shortcode",
+   "description": "Gestione degli shortcode tramite plugin Shortcoder. Tutte le operazioni passano tramite parametro \"action\". **Necessari:** header Authorization: Bearer TOKEN e user_code nel body.\n",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "action": {
+      "description": "Azione da eseguire.",
+      "type": "string",
+      "enum": [
+       "list-shortcode",
+       "get-shortcode",
+       "create-shortcode",
+       "update-shortcode",
+       "delete-shortcode",
+       "get-chunk",
+       "get-transient"
+      ]
+     },
+     "shortcode_id": {
+      "description": "ID dello shortcode (per get, update, delete).",
+      "type": "integer"
+     },
+     "shortcode_name": {
+      "description": "Nome dello shortcode (per create, update).",
+      "type": "string"
+     },
+     "php_code": {
+      "description": "Codice PHP dello shortcode (per create, update).",
+      "type": "string"
+     },
+     "chunk_key": {
+      "description": "Chiave del transient (per get-chunk, get-transient).",
+      "type": "string"
+     },
+     "chunk_index": {
+      "description": "Indice del chunk da recuperare (per get-chunk).",
+      "type": "integer"
+     },
+     "user_code": {
+      "description": "Codice utente per la validazione.",
+      "type": "string"
+     }
+    },
+    "required": [
+     "action",
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/manage-debug-and-security-with-user-code/": {
+  "post": {
+   "summary": "Gestisce operazioni di debug e sicurezza tramite user_code",
+   "description": "",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice utente per la validazione",
+      "type": "string"
+     },
+     "action": {
+      "description": "Azione da eseguire:\n- `enable-error-log`: abilita la scrittura di `error_log`.\n- `disable-error-log`: disabilita `error_log`.\n- `get-logs`: restituisce i log; opzionali `chunk_size`, `chunk_index`.\n- `filter-logs`: filtra i log per `date` o `keyword`; opzionali `chunk_size`, `chunk_index`.\n- `scan-database-create-post`: cerca malware nel DB e nei file e crea un post con i risultati.\n- `delete-suspicious-users`: elimina utenti sospetti e riassegna i post.\n- `list-users-permissions`: elenca utenti con permessi/ruoli; opzionali `chunk_size`, `chunk_index`.\n",
+      "type": "string",
+      "enum": [
+       "enable-error-log",
+       "disable-error-log",
+       "get-logs",
+       "filter-logs",
+       "scan-database-create-post",
+       "delete-suspicious-users",
+       "list-users-permissions"
+      ]
+     },
+     "date": {
+      "description": "Data per filtrare i log (`filter-logs`)",
+      "type": "string"
+     },
+     "keyword": {
+      "description": "Parola chiave per filtrare i log (`filter-logs`)",
+      "type": "string"
+     },
+     "chunk_index": {
+      "description": "Indice del chunk da recuperare (`get-logs`, `filter-logs`, `list-users-permissions`)",
+      "type": "integer"
+     },
+     "chunk_size": {
+      "description": "Numero di elementi per chunk (`get-logs`, `filter-logs`, `list-users-permissions`)",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/manage-articles-with-user-code/": {
+  "post": {
+   "summary": "Gestisce operazioni su articoli e categorie tramite user_code",
+   "description": "",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice utente per la validazione",
+      "type": "string"
+     },
+     "action": {
+      "description": "Azione da eseguire:\n- `create-post`: crea un nuovo articolo; richiede `title` e `content`; opzionali `status`, `categories`, `tags`, `excerpt`, `featured_image`, `seo_title`, `meta_description`, `focus_keywords`, `slug`.\n- `update-post`: aggiorna un articolo esistente; richiede `id` e i campi da modificare (`title`, `content`, `status`, `categories`, `tags`, `excerpt`, `featured_image`, `seo_title`, `meta_description`, `focus_keywords`, `slug`). I campi non inviati rimangono invariati.\n- `append-content`: aggiunge contenuto a un articolo; richiede `id` e `content`. Puoi specificare `position` (`start` | `end` | `before` | `after`) e, per i valori `before` e `after`, indicare l'H2 di riferimento tramite `h2_number`.\n- `append-paragraph`: aggiunge un paragrafo; richiede `id`, `paragraph` e opzionali `position` (`start` | `end` | `before` | `after`) e `reference_h2`.\n- `embed-video`: incorpora un video; richiede `id`, `video_url`, `video_title` e opzionali `position` (`start` | `end` | `before` | `after`) e `reference_h2`.\n- `replace-text`: sostituisce testo nel contenuto del post; richiede `id`, `old_html`, `new_html` e opzionale `occurrence_index`.\n- `replace-html`: sostituisce HTML nel contenuto del post; richiede `id`, `old_html`, `new_html` e opzionale `occurrence_index`.\n- `read-post`: legge un articolo in chunk; richiede `id`.\n- `get-post`: recupera un articolo; richiede `post_id`.\n- `search-post`: ricerca articoli; richiede `search` e opzionali `post_type`, `limit`.\n- `get-chunk`: recupera un chunk salvato; richiede `chunk_key` e `chunk_index`.\n- `get-transient`: recupera tutti i chunk salvati; richiede `chunk_key`.\n- `create-category`: crea una categoria; richiede `name`.\n- `assign-category`: assegna categorie a un articolo; richiede `post_id` e `category_ids`.\n- `update-seo-title`: aggiorna il titolo SEO; richiede `id` e `seo_title`.\n- `update-meta-description`: aggiorna la meta description; richiede `id` e `meta_description`.\n- `update-focus-keywords`: aggiorna le focus keywords; richiede `id` e `focus_keywords`.\n- `update-slug`: aggiorna lo slug del post; richiede `id` e `slug`.\n",
+      "type": "string",
+      "enum": [
+       "create-post",
+       "update-post",
+       "append-content",
+       "append-paragraph",
+       "embed-video",
+       "replace-text",
+       "replace-html",
+       "read-post",
+       "get-post",
+       "search-post",
+       "get-chunk",
+       "get-transient",
+       "create-category",
+       "assign-category",
+       "update-seo-title",
+       "update-meta-description",
+       "update-focus-keywords",
+       "update-slug"
+      ]
+     },
+     "id": {
+      "description": "ID del post per `update-post`, `append-content`, `append-paragraph`, `embed-video`, `replace-text`, `replace-html`, `read-post`, `update-seo-title`, `update-meta-description`, `update-focus-keywords`, `update-slug`",
+      "type": "integer"
+     },
+     "post_id": {
+      "description": "ID del post per `get-post` o `assign-category`",
+      "type": "integer"
+     },
+     "title": {
+      "description": "Titolo del post (`create-post`, `update-post`)",
+      "type": "string"
+     },
+     "content": {
+      "description": "Contenuto del post (`create-post`, `update-post`, `append-content`)",
+      "type": "string"
+     },
+     "paragraph": {
+      "description": "Paragrafo da aggiungere (`append-paragraph`)",
+      "type": "string"
+     },
+     "video_url": {
+      "description": "URL del video da incorporare (`embed-video`)",
+      "type": "string",
+      "format": "uri"
+     },
+     "video_title": {
+      "description": "Titolo del video (`embed-video`)",
+      "type": "string"
+     },
+     "status": {
+      "description": "Stato del post (`create-post`, `update-post`)",
+      "type": "string",
+      "enum": [
+       "publish",
+       "draft"
+      ]
+     },
+     "excerpt": {
+      "description": "Riassunto del post (`create-post`, `update-post`)",
+      "type": "string"
+     },
+     "featured_image": {
+      "description": "URL dell'immagine in evidenza (`create-post`, `update-post`)",
+      "type": "string",
+      "format": "uri"
+     },
+     "categories": {
+      "description": "ID delle categorie da associare al post (`create-post`, `update-post`)",
+      "type": "array",
+      "items": {
+       "type": "integer"
+      }
+     },
+     "tags": {
+      "description": "Tag del post (`create-post`, `update-post`)",
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "position": {
+      "description": "Posizione in cui aggiungere il contenuto (`append-content`, `append-paragraph`, `embed-video`). Per `append-content` il valore `before` o `after` richiede l'uso di `h2_number`.",
+      "type": "string",
+      "enum": [
+       "start",
+       "end",
+       "before",
+       "after"
+      ]
+     },
+     "h2_number": {
+      "description": "Numero progressivo (1-based) dell'H2 di riferimento quando `append-content` usa `position` `before` o `after`.",
+      "type": "integer"
+     },
+     "reference_h2": {
+      "description": "Testo dell'H2 di riferimento per l'inserimento (`append-paragraph`, `embed-video`)",
+      "type": "string"
+     },
+     "old_html": {
+      "description": "Testo o HTML da sostituire (`replace-text`, `replace-html`)",
+      "type": "string"
+     },
+     "new_html": {
+      "description": "Nuovo testo o HTML da inserire (`replace-text`, `replace-html`)",
+      "type": "string"
+     },
+     "occurrence_index": {
+      "description": "Indice dell'occorrenza da sostituire (`replace-text`, `replace-html`)",
+      "type": "integer"
+     },
+     "search": {
+      "description": "Termine di ricerca (`search-post`)",
+      "type": "string"
+     },
+     "post_type": {
+      "description": "Tipo di post (`search-post`)",
+      "type": "string"
+     },
+     "limit": {
+      "description": "Numero massimo di risultati (`search-post`)",
+      "type": "integer"
+     },
+     "chunk_key": {
+      "description": "Chiave del transient (`get-chunk`, `get-transient`)",
+      "type": "string"
+     },
+     "chunk_index": {
+      "description": "Indice del chunk da recuperare (`get-chunk`)",
+      "type": "integer"
+     },
+     "name": {
+      "description": "Nome della categoria da creare (`create-category`)",
+      "type": "string"
+     },
+     "category_ids": {
+      "description": "ID delle categorie da assegnare al post (`assign-category`)",
+      "type": "array",
+      "items": {
+       "type": "integer"
+      }
+     },
+     "seo_title": {
+      "description": "Titolo SEO (`create-post`, `update-post`, `update-seo-title`)",
+      "type": "string"
+     },
+     "meta_description": {
+      "description": "Meta description (`create-post`, `update-post`, `update-meta-description`)",
+      "type": "string"
+     },
+     "focus_keywords": {
+      "description": "Focus keywords (`create-post`, `update-post`, `update-focus-keywords`)",
+      "type": "string"
+     },
+     "slug": {
+      "description": "Slug del post (`create-post`, `update-post`, `update-slug`)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/woocommerce": {
+  "post": {
+   "summary": "Gestione unificata di prodotti e ordini WooCommerce",
+   "description": "",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice utente per autorizzazione",
+      "type": "string"
+     },
+     "action": {
+      "description": "Azione da eseguire:\n- `create-product`: crea un nuovo prodotto; richiede `name` e `price`; opzionali `sku`, `description`, `short_description`, `stock_quantity`, `stock_status`, `categories`, `tags`, `regular_price`, `sale_price`, `weight`, `dimensions`, `seo_title`, `meta_description`, `focus_keywords`.\n- `update-product`: aggiorna un prodotto esistente; tutti i campi aggiornabili dalle singole azioni (slug, immagini, titolo e meta description SEO, codici prodotto, stato e quantità di magazzino, attributi, ecc.) possono essere passati; richiede `id` e i campi da modificare.\n- `add-category-on-product`: aggiunge una categoria a un prodotto; richiede `id` e `category_id`.\n- `set-product-categories`: imposta l'elenco completo delle categorie di un prodotto; richiede `id` e `categories`.\n- `create-category`: crea una nuova categoria prodotto; richiede `category_name`; opzionali `category_slug`, `parent_id`.\n- `update-featured-image-product`: aggiorna l'immagine in evidenza; richiede `id` e `image_url`.\n- `update-image-in-gallery`: aggiorna un'immagine nella galleria; richiede `id`, `image_url` e `index`.\n- `update-metadescription-product`: aggiorna la meta description; richiede `id` e `meta_description`.\n - `update-seo-title-product`: aggiorna i campi SEO (titolo, meta description, focus keywords); richiede `id` e almeno uno tra `seo_title`, `meta_description`, `focus_keywords`.\n - `update-short-description`: aggiorna la descrizione breve; richiede `id` e `short_description`.\n- `update-long-description`: aggiorna la descrizione lunga; richiede `id` e `description`.\n- `update-product-price`: aggiorna il prezzo; richiede `id` e `price`.\n- `update-product-offer-price`: aggiorna il prezzo in offerta; richiede `id` e `sale_price`.\n  - `update-quantity-product`: aggiorna la quantità; richiede `id` e `stock_quantity`.\n  - `enable-stock-management`: attiva la gestione delle scorte; richiede `id`; opzionali `manage_stock`, `stock_quantity`, `stock_status`.\n  - `update-gtin-code`: aggiorna solo il codice GTIN del prodotto; richiede `id` e `gtin`.\n  - `update-product-codes`: aggiorna i codici prodotto (GTIN, UPC, EAN, ISBN, SKU); richiede `id` e i campi specifici.\n  - `update-purchase-note`: aggiorna la nota di acquisto; richiede `id` e `purchase_note`.\n- `update-product-attributes`: aggiorna gli attributi; richiede `id` e `attributes`.\n- `create-product-attribute`: crea un attributo personalizzato chiave-valore; richiede `attribute_name` e `attribute_value`.\n- `get-expedition-class`: elenca le classi di spedizione.\n- `create-expedition-class`: crea una classe di spedizione; richiede `shipping_class_name` e `shipping_class_slug`.\n- `set-expedition-class`: imposta la classe di spedizione; richiede `id` e `shipping_class`.\n- `update-slug-product`: aggiorna lo slug del prodotto; richiede `id` e `slug`.\n- `insert-link-in-product`: inserisce un link nel contenuto; richiede `id`, `link_url` e `link_text`.\n- `append-html-in-long-description`: aggiunge HTML alla descrizione lunga; richiede `id` e `html_content`.\n- `append-video-in-long-description`: aggiunge un video alla descrizione lunga; richiede `id` e `video_url`.\n- `replace-html-in-long-description`: sostituisce HTML nella descrizione lunga; richiede `id`, `old_html` e `new_html`.\n- `list-and-search-product`: elenca i prodotti con supporto a paginazione (`page`, `per_page`) e ricerca (`search`).\n- `get-orders`: recupera gli ordini; opzionali `page`, `per_page`.\n- `get-order`: recupera un singolo ordine; richiede `id`.\n- `update-order`: aggiorna un ordine; richiede `id` e i campi da modificare (`status`, `customer_note`).\n- `insert-image-product`: inserisce un'immagine; richiede `id` e `image_url`.\n- `insert-image-in-gallery-product`: inserisce un'immagine nella galleria; richiede `id` e `image_url`.\n",
+      "type": "string",
+      "enum": [
+       "create-product",
+       "update-product",
+       "add-category-on-product",
+       "set-product-categories",
+       "create-category",
+       "update-featured-image-product",
+       "update-image-in-gallery",
+       "update-metadescription-product",
+       "update-seo-title-product",
+       "update-short-description",
+       "update-long-description",
+       "update-product-price",
+       "update-product-offer-price",
+       "update-quantity-product",
+       "enable-stock-management",
+       "update-gtin-code",
+       "update-product-codes",
+       "update-purchase-note",
+       "update-product-attributes",
+       "create-product-attribute",
+       "get-expedition-class",
+       "create-expedition-class",
+       "set-expedition-class",
+       "update-slug-product",
+       "insert-link-in-product",
+       "append-html-in-long-description",
+       "append-video-in-long-description",
+       "replace-html-in-long-description",
+       "list-and-search-product",
+       "get-orders",
+       "get-order",
+       "update-order",
+       "insert-image-product",
+       "insert-image-in-gallery-product"
+      ]
+     },
+     "id": {
+      "description": "ID del prodotto o dell'ordine",
+      "type": "integer"
+     },
+     "name": {
+      "description": "Nome del prodotto (`create-product`, `update-product`)",
+      "type": "string"
+     },
+     "price": {
+      "description": "Prezzo del prodotto (`create-product`, `update-product`, `update-product-price`)",
+      "type": "number"
+     },
+     "sku": {
+      "description": "SKU del prodotto (`create-product`, `update-product`, `update-product-codes`); alias `code`.",
+      "type": "string"
+     },
+     "description": {
+      "description": "Descrizione lunga del prodotto (`create-product`, `update-product`, `update-long-description`)",
+      "type": "string"
+     },
+     "short_description": {
+      "description": "Descrizione breve del prodotto (`create-product`, `update-product`, `update-short-description`)",
+      "type": "string"
+     },
+     "stock_quantity": {
+      "description": "Quantità a magazzino (`create-product`, `update-product`, `update-quantity-product`, `enable-stock-management`)",
+      "type": "integer"
+     },
+     "stock_status": {
+      "description": "Stato del magazzino (`create-product`, `update-product`, `enable-stock-management`)",
+      "type": "string",
+      "enum": [
+       "instock",
+       "outofstock",
+       "onbackorder"
+      ]
+     },
+     "manage_stock": {
+      "description": "Abilita gestione scorte (`enable-stock-management`)",
+      "type": "boolean"
+     },
+     "categories": {
+      "description": "Categorie associate al prodotto (`create-product`, `update-product`, `set-product-categories`)",
+      "type": "array",
+      "items": {
+       "type": "integer"
+      }
+     },
+     "tags": {
+      "description": "Tag del prodotto (`create-product`, `update-product`)",
+      "type": "array",
+      "items": {
+       "type": "integer"
+      }
+     },
+     "regular_price": {
+      "description": "Prezzo normale (`create-product`, `update-product`)",
+      "type": "number"
+     },
+     "sale_price": {
+      "description": "Prezzo in offerta (`create-product`, `update-product`, `update-product-offer-price`)",
+      "type": "number"
+     },
+     "weight": {
+      "description": "Peso del prodotto (`create-product`, `update-product`)",
+      "type": "number"
+     },
+     "dimensions": {
+      "description": "Dimensioni del prodotto (`create-product`, `update-product`)",
+      "type": "object",
+      "properties": {
+       "length": {
+        "type": "number"
+       },
+       "width": {
+        "type": "number"
+       },
+       "height": {
+        "type": "number"
+       }
+      }
+     },
+     "seo_title": {
+      "description": "Titolo SEO per RankMath (`create-product`, `update-product`, `update-seo-title-product`)",
+      "type": "string"
+     },
+     "meta_description": {
+      "description": "Meta description per RankMath (`create-product`, `update-product`, `update-metadescription-product`, `update-seo-title-product`)",
+      "type": "string"
+     },
+     "focus_keywords": {
+      "description": "Focus keywords per RankMath (`create-product`, `update-product`, `update-seo-title-product`)",
+      "type": "string"
+     },
+     "gtin": {
+      "description": "Codice GTIN (`update-product`, `update-product-codes`)",
+      "type": "string"
+     },
+     "upc": {
+      "description": "Codice UPC (`update-product`, `update-product-codes`)",
+      "type": "string"
+     },
+     "ean": {
+      "description": "Codice EAN (`update-product`, `update-product-codes`)",
+      "type": "string"
+     },
+     "isbn": {
+      "description": "Codice ISBN (`update-product`, `update-product-codes`)",
+      "type": "string"
+     },
+     "purchase_note": {
+      "description": "Nota di acquisto (`update-product`, `update-purchase-note`)",
+      "type": "string"
+     },
+     "attributes": {
+      "description": "Attributi del prodotto (`update-product`, `update-product-attributes`)",
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "value": {
+         "type": "string"
+        },
+        "options": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     },
+     "attribute_name": {
+      "description": "Nome dell'attributo personalizzato (`create-product-attribute`)",
+      "type": "string"
+     },
+     "attribute_value": {
+      "description": "Valore dell'attributo personalizzato (`create-product-attribute`)",
+      "type": "string"
+     },
+     "shipping_class": {
+      "description": "Classe di spedizione da assegnare (`set-expedition-class`)",
+      "type": "string"
+     },
+     "shipping_class_name": {
+      "description": "Nome della classe di spedizione (`create-expedition-class`)",
+      "type": "string"
+     },
+     "shipping_class_slug": {
+      "description": "Slug della classe di spedizione (`create-expedition-class`)",
+      "type": "string"
+     },
+     "slug": {
+      "description": "Slug del prodotto (`create-product`, `update-product`, `update-slug-product`)",
+      "type": "string"
+     },
+     "category_id": {
+      "description": "ID della categoria da aggiungere (`add-category-on-product`)",
+      "type": "integer"
+     },
+     "category_name": {
+      "description": "Nome della categoria da creare (`create-category`)",
+      "type": "string"
+     },
+     "category_slug": {
+      "description": "Slug della categoria (`create-category`)",
+      "type": "string"
+     },
+     "parent_id": {
+      "description": "ID della categoria genitore (`create-category`)",
+      "type": "integer"
+     },
+     "image_url": {
+      "description": "URL dell'immagine (`update-product`, `update-featured-image-product`, `update-image-in-gallery`, `insert-image-product`, `insert-image-in-gallery-product`)",
+      "type": "string",
+      "format": "uri"
+     },
+     "gallery_image_urls": {
+      "description": "URL delle immagini della galleria (`update-product`)",
+      "type": "array",
+      "items": {
+       "type": "string",
+       "format": "uri"
+      }
+     },
+     "index": {
+      "description": "Indice dell'immagine nella galleria (`update-image-in-gallery`)",
+      "type": "integer"
+     },
+     "html_content": {
+      "description": "Contenuto HTML da aggiungere (`append-html-in-long-description`, `replace-html-in-long-description`)",
+      "type": "string"
+     },
+     "video_url": {
+      "description": "URL del video da inserire (`append-video-in-long-description`)",
+      "type": "string",
+      "format": "uri"
+     },
+     "link_url": {
+      "description": "URL del link da inserire (`insert-link-in-product`)",
+      "type": "string",
+      "format": "uri"
+     },
+     "link_text": {
+      "description": "Testo del link (`insert-link-in-product`)",
+      "type": "string"
+     },
+     "old_html": {
+      "description": "HTML da sostituire (`replace-html-in-long-description`)",
+      "type": "string"
+     },
+     "new_html": {
+      "description": "Nuovo HTML (`replace-html-in-long-description`)",
+      "type": "string"
+     },
+     "page": {
+      "description": "Pagina dei risultati (`get-orders`, `list-and-search-product`)",
+      "type": "integer"
+     },
+     "per_page": {
+      "description": "Numero di risultati per pagina (`get-orders`, `list-and-search-product`)",
+      "type": "integer"
+     },
+     "search": {
+      "description": "Termine di ricerca (`list-and-search-product`)",
+      "type": "string"
+     },
+     "status": {
+      "description": "Stato dell'ordine (`update-order`)",
+      "type": "string"
+     },
+     "customer_note": {
+      "description": "Nota del cliente (`update-order`)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/retrieve-price-and-information-for-crypto-coin/": {
+  "post": {
+   "summary": "Recupera informazioni aggiornate da DexScreener per un token o una coppia",
+   "description": "",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice utente per la validazione",
+      "type": "string"
+     },
+     "action": {
+      "description": "Azione da eseguire.\n- `latest-token-profiles` non richiede altri parametri.\n- `boosted-tokens` e `top-boosts` non richiedono parametri aggiuntivi.\n- `token-orders` richiede `chain_id` e `token_address`.\n- `pairs-by-token` richiede `token_address`.\n- `pairs-by-chain` richiede `chain_id` e `pair_id`.\n- `search-pairs` richiede `query`.\n- `secure_analytics_on_crypto_token` richiede `query` oppure `token_address`.\n",
+      "example": "pairs-by-token",
+      "type": "string"
+     },
+     "token_address": {
+      "description": "Indirizzo del token da analizzare",
+      "type": "string"
+     },
+     "chain_id": {
+      "description": "Identificativo della blockchain (es. `ethereum`, `solana`)",
+      "type": "string"
+     },
+     "pair_id": {
+      "description": "Identificativo della coppia DexScreener",
+      "type": "string"
+     },
+     "query": {
+      "description": "Testo da utilizzare per le ricerche",
+      "type": "string"
+     },
+     "chunk_index": {
+      "description": "Indice del chunk da recuperare in caso di risposte di grandi dimensioni",
+      "type": "integer",
+      "default": 0
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/read-post-in-chunks/{id}": {
+  "get": {
+   "summary": "Legge il contenuto di un post lungo suddividendolo in chunk",
+   "description": "",
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "ID del post da leggere"
+    },
+    {
+     "name": "chunk_size",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Dimensione del chunk in caratteri"
+    },
+    {
+     "name": "chunk_index",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Indice del chunk da recuperare"
+    }
+   ],
+   "body": {}
+  }
+ },
+ "/v1/replace-text/{id}": {
+  "post": {
+   "summary": "Sostituisce un frammento di testo o HTML nel contenuto di un post",
+   "description": "",
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "ID del post da aggiornare"
+    }
+   ],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice utente per la validazione",
+      "type": "string"
+     },
+     "old_html": {
+      "description": "Testo o HTML da sostituire",
+      "type": "string"
+     },
+     "new_html": {
+      "description": "Contenuto sostitutivo",
+      "type": "string"
+     },
+     "occurrence_index": {
+      "description": "Indice dell'occorrenza da sostituire quando ne esistono più di una (0-based)",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "user_code",
+     "old_html",
+     "new_html"
+    ]
+   }
+  }
+ },
+ "/v1/invideo-action/": {
+  "post": {
+   "summary": "Esegue azioni sull'API InVideo utilizzando il mapping configurato",
+   "description": "",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice utente per la validazione",
+      "type": "string"
+     },
+     "action": {
+      "description": "Nome dell'azione definita nel mapping InVideo",
+      "type": "string"
+     },
+     "Codice_richiesta": {
+      "description": "Identificativo personalizzato della richiesta",
+      "type": "string"
+     },
+     "Corpo": {
+      "description": "Struttura dati da inviare all'API InVideo",
+      "type": "object",
+      "properties": {
+       "parametri": {
+        "description": "Parametri richiesti dall'azione selezionata",
+        "type": "object"
+       }
+      }
+     }
+    },
+    "required": [
+     "user_code",
+     "action",
+     "Corpo"
+    ]
+   }
+  }
+ },
+ "/v1/placeholders": {
+  "get": {
+   "summary": "Elenca tutti i segnaposto disponibili",
+   "description": "",
+   "parameters": [
+    {
+     "name": "context",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Filtra i segnaposto per contesto specifico"
+    }
+   ],
+   "body": {}
+  },
+  "post": {
+   "summary": "Crea un nuovo segnaposto per email o automazioni",
+   "description": "Richiedi la creazione passando user_code per autorizzare e definendo fake_value, real_value e facoltativo context nel body per il nuovo segnaposto.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice utente per la validazione",
+      "type": "string"
+     },
+     "fake_value": {
+      "description": "Nome simbolico del segnaposto",
+      "type": "string"
+     },
+     "real_value": {
+      "description": "Valore reale da sostituire",
+      "type": "string"
+     },
+     "context": {
+      "description": "Contesto in cui applicare il segnaposto",
+      "type": "string"
+     }
+    },
+    "required": [
+     "user_code",
+     "fake_value",
+     "real_value"
+    ]
+   }
+  }
+ },
+ "/v1/placeholders/{id}": {
+  "patch": {
+   "summary": "Aggiorna un segnaposto esistente",
+   "description": "Specifica l'ID del segnaposto nel path e invia user_code con i campi da aggiornare (fake_value, real_value, context) nel body per modificarlo.",
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "ID del segnaposto da aggiornare"
+    }
+   ],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice utente per la validazione",
+      "type": "string"
+     },
+     "fake_value": {
+      "type": "string"
+     },
+     "real_value": {
+      "type": "string"
+     },
+     "context": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  },
+  "delete": {
+   "summary": "Elimina un segnaposto",
+   "description": "Indica l'ID del segnaposto nel path e fornisci user_code come parametro di query per autorizzare l'eliminazione.",
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "ID del segnaposto da eliminare"
+    },
+    {
+     "name": "user_code",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "Codice utente per la validazione"
+    }
+   ],
+   "body": {}
+  }
+ },
+ "/v1/placeholders-manager": {
+  "get": {
+   "summary": "Restituisce i segnaposto gestiti tramite il manager dedicato",
+   "description": "",
+   "parameters": [
+    {
+     "name": "context",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Filtra i segnaposto per contesto"
+    }
+   ],
+   "body": {}
+  },
+  "post": {
+   "summary": "Crea un segnaposto tramite il manager dedicato",
+   "description": "Fornisci user_code insieme a fake_value, real_value e opzionale context nel body per registrare un segnaposto tramite il manager.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice utente per la validazione",
+      "type": "string"
+     },
+     "fake_value": {
+      "description": "Nome simbolico del segnaposto",
+      "type": "string"
+     },
+     "real_value": {
+      "description": "Valore reale da associare",
+      "type": "string"
+     },
+     "context": {
+      "description": "Contesto del segnaposto",
+      "type": "string"
+     }
+    },
+    "required": [
+     "user_code",
+     "fake_value",
+     "real_value"
+    ]
+   }
+  }
+ },
+ "/v1/placeholders-manager/{id}": {
+  "patch": {
+   "summary": "Aggiorna i valori di un segnaposto tramite il manager",
+   "description": "Inserisci l'ID del segnaposto gestito nel path e invia user_code con i valori da aggiornare (fake_value, real_value, context) nel body.",
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "ID del segnaposto da aggiornare"
+    }
+   ],
+   "body": {
+    "properties": {
+     "user_code": {
+      "description": "Codice utente per la validazione",
+      "type": "string"
+     },
+     "fake_value": {
+      "type": "string"
+     },
+     "real_value": {
+      "type": "string"
+     },
+     "context": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  },
+  "delete": {
+   "summary": "Elimina un segnaposto tramite il manager",
+   "description": "Passa l'ID del segnaposto nel path e user_code in query per autorizzare la rimozione dal manager.",
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "ID del segnaposto da eliminare"
+    },
+    {
+     "name": "user_code",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "Codice utente per la validazione"
+    }
+   ],
+   "body": {}
+  }
+ },
+ "/v1/manage-n8n": {
+  "post": {
+   "summary": "Gestione centralizzata n8n tramite action",
+   "description": "Endpoint unificato per gestire workflow, execution e credenziali su n8n.\nRichiede autenticazione Bearer, user_code e la selezione dell'azione tramite campo `action`.\n",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "action": {
+      "type": "string",
+      "description": "Azione da eseguire sul connettore n8n.",
+      "enum": [
+       "create_workflow",
+       "update_workflow",
+       "delete_workflow",
+       "get_workflow",
+       "list_workflows",
+       "search_workflows",
+       "activate_workflow",
+       "deactivate_workflow",
+       "run_workflow",
+       "list_executions",
+       "search_executions",
+       "get_execution",
+       "delete_execution",
+       "create_credentials",
+       "list_credentials",
+       "search_credentials",
+       "delete_credentials",
+       "health",
+       "version",
+       "test_connection"
+      ]
+     },
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente richiesto per autorizzare la richiesta."
+     },
+     "workflow_id": {
+      "type": "string",
+      "description": "ID workflow richiesto per azioni puntuali sui workflow."
+     },
+     "execution_id": {
+      "type": "string",
+      "description": "ID execution richiesto per recupero/cancellazione esecuzioni."
+     },
+     "credential_id": {
+      "type": "string",
+      "description": "ID credenziale richiesto per azioni sulle credenziali."
+     },
+     "workflow": {
+      "type": "object",
+      "description": "Payload workflow per creazione o aggiornamento."
+     },
+     "data": {
+      "type": "object",
+      "description": "Dati opzionali da passare in esecuzione manuale workflow."
+     },
+     "filters": {
+      "type": "object",
+      "description": "Filtri opzionali per listing/search."
+     },
+     "q": {
+      "type": "string",
+      "description": "Query testuale opzionale per ricerca."
+     },
+     "page": {
+      "type": "integer",
+      "description": "Numero pagina per listing paginati."
+     },
+     "per_page": {
+      "type": "integer",
+      "description": "Numero elementi per pagina."
+     }
+    },
+    "required": [
+     "action",
+     "user_code"
+    ]
+   }
+  }
+ },
+ "securitySchemes": {
+  "bearerAuth": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  }
+ },
+ "schemas": {
+  "ManageShareShareRequest": {
+   "summary": "",
+   "description": "Richiesta per condividere o schedulare un post tramite Blog2Social.",
+   "parameters": [],
+   "body": {}
+  },
+  "ManageShareNetworksRequest": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  },
+  "ManageShareAuthorsRequest": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  },
+  "ManageShareSocialsRequest": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  },
+  "ManageShareImagesRequest": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  },
+  "ManageShareShareResponse": {
+   "summary": "",
+   "description": "Esito della condivisione/schedulazione Blog2Social.",
+   "parameters": [],
+   "body": {}
+  },
+  "ManageShareNetworksResponse": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  },
+  "ManageShareAuthorsResponse": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  },
+  "ManageShareSocialsResponse": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  },
+  "ManageShareImagesResponse": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  },
+  "SearchResult": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  },
+  "SearchResults": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  },
+  "Document": {
+   "summary": "",
+   "description": "",
+   "parameters": [],
+   "body": {}
+  }
+ },
+ "/v1/memory/admin/delete-goals/": {
+  "post": {
+   "summary": "Delete goals",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "goal_ids": {
+      "type": "string",
+      "description": "Goal ids."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/memory/admin/delete-steps/": {
+  "post": {
+   "summary": "Delete steps",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "step_ids": {
+      "type": "string",
+      "description": "Step ids."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/tools-manifest/": {
+  "post": {
+   "summary": "Tools manifest",
+   "description": "Rotta del plugin. Raccoglie 5 azioni: si sceglie con il campo action.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "dettaglio",
+       "handshake",
+       "schema",
+       "scopri-parametri-dei-tool",
+       "stretta-di-mano"
+      ],
+      "description": "Azione da eseguire su questa rotta."
+     },
+     "tool": {
+      "type": "string",
+      "description": "Tool."
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/create-post/": {
+  "post": {
+   "summary": "Create post",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "categories": {
+      "type": "string",
+      "description": "Categorie, per id o per nome."
+     },
+     "content": {
+      "type": "string",
+      "description": "Contenuto HTML del post."
+     },
+     "excerpt": {
+      "type": "string",
+      "description": "Riassunto breve."
+     },
+     "featured_image": {
+      "type": "string",
+      "description": "Immagine in evidenza: URL o id allegato."
+     },
+     "focus_keywords": {
+      "type": "string",
+      "description": "Parole chiave di focus per la SEO."
+     },
+     "meta_description": {
+      "type": "string",
+      "description": "Meta description SEO."
+     },
+     "meta_input": {
+      "type": "string",
+      "description": "Campi meta aggiuntivi, come oggetto."
+     },
+     "seo_title": {
+      "type": "string",
+      "description": "Titolo SEO (Rank Math)."
+     },
+     "status": {
+      "type": "string",
+      "description": "Stato del post: publish, draft, pending, private."
+     },
+     "tags": {
+      "type": "string",
+      "description": "Tag, per id o per nome."
+     },
+     "title": {
+      "type": "string",
+      "description": "Titolo del contenuto."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/create-post-with-user-code/": {
+  "post": {
+   "summary": "Create post with user code",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "categories": {
+      "type": "string",
+      "description": "Categorie, per id o per nome."
+     },
+     "content": {
+      "type": "string",
+      "description": "Contenuto HTML del post."
+     },
+     "excerpt": {
+      "type": "string",
+      "description": "Riassunto breve."
+     },
+     "featured_image": {
+      "type": "string",
+      "description": "Immagine in evidenza: URL o id allegato."
+     },
+     "focus_keywords": {
+      "type": "string",
+      "description": "Parole chiave di focus per la SEO."
+     },
+     "meta_description": {
+      "type": "string",
+      "description": "Meta description SEO."
+     },
+     "meta_input": {
+      "type": "string",
+      "description": "Campi meta aggiuntivi, come oggetto."
+     },
+     "seo_title": {
+      "type": "string",
+      "description": "Titolo SEO (Rank Math)."
+     },
+     "slug": {
+      "type": "string",
+      "description": "Slug dell'URL."
+     },
+     "status": {
+      "type": "string",
+      "description": "Stato del post: publish, draft, pending, private."
+     },
+     "tags": {
+      "type": "string",
+      "description": "Tag, per id o per nome."
+     },
+     "title": {
+      "type": "string",
+      "description": "Titolo del contenuto."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/manage-page-with-user-code/": {
+  "post": {
+   "summary": "Manage page with user code",
+   "description": "Rotta del plugin. Raccoglie 2 azioni: si sceglie con il campo action.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "create-page",
+       "update-page"
+      ],
+      "description": "Azione da eseguire su questa rotta."
+     },
+     "content": {
+      "type": "string",
+      "description": "Contenuto HTML del post."
+     },
+     "excerpt": {
+      "type": "string",
+      "description": "Riassunto breve."
+     },
+     "featured_image": {
+      "type": "string",
+      "description": "Immagine in evidenza: URL o id allegato."
+     },
+     "focus_keywords": {
+      "type": "string",
+      "description": "Parole chiave di focus per la SEO."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "meta_description": {
+      "type": "string",
+      "description": "Meta description SEO."
+     },
+     "seo_title": {
+      "type": "string",
+      "description": "Titolo SEO (Rank Math)."
+     },
+     "status": {
+      "type": "string",
+      "description": "Stato del post: publish, draft, pending, private."
+     },
+     "title": {
+      "type": "string",
+      "description": "Titolo del contenuto."
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/manage-file/": {
+  "post": {
+   "summary": "Manage file",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "description": "Azione da eseguire."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-post/{id}/": {
+  "post": {
+   "summary": "Update post",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "categories": {
+      "type": "string",
+      "description": "Categorie, per id o per nome."
+     },
+     "content": {
+      "type": "string",
+      "description": "Contenuto HTML del post."
+     },
+     "excerpt": {
+      "type": "string",
+      "description": "Riassunto breve."
+     },
+     "featured_image": {
+      "type": "string",
+      "description": "Immagine in evidenza: URL o id allegato."
+     },
+     "focus_keywords": {
+      "type": "string",
+      "description": "Parole chiave di focus per la SEO."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "meta_description": {
+      "type": "string",
+      "description": "Meta description SEO."
+     },
+     "seo_title": {
+      "type": "string",
+      "description": "Titolo SEO (Rank Math)."
+     },
+     "status": {
+      "type": "string",
+      "description": "Stato del post: publish, draft, pending, private."
+     },
+     "tags": {
+      "type": "string",
+      "description": "Tag, per id o per nome."
+     },
+     "title": {
+      "type": "string",
+      "description": "Titolo del contenuto."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/send-email/": {
+  "post": {
+   "summary": "Send email",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "from": {
+      "type": "string",
+      "description": "From."
+     },
+     "message": {
+      "type": "string",
+      "description": "Testo del messaggio."
+     },
+     "password": {
+      "type": "string",
+      "description": "Password."
+     },
+     "port": {
+      "type": "string",
+      "description": "Port."
+     },
+     "server": {
+      "type": "string",
+      "description": "Server."
+     },
+     "subject": {
+      "type": "string",
+      "description": "Oggetto del messaggio."
+     },
+     "to": {
+      "type": "string",
+      "description": "To."
+     },
+     "username": {
+      "type": "string",
+      "description": "Nome utente."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/insert-image/": {
+  "post": {
+   "summary": "Insert image",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "image_url": {
+      "type": "string",
+      "description": "Indirizzo dell'immagine."
+     },
+     "post_id": {
+      "type": "integer",
+      "description": "Identificativo del post."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/scrape-twitter/": {
+  "get": {
+   "summary": "Scrape twitter",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "comments_limit": {
+      "type": "integer",
+      "description": "Quanti commenti riportare."
+     },
+     "tweet_id": {
+      "type": "integer",
+      "description": "Identificativo del post su X/Twitter."
+     },
+     "username": {
+      "type": "string",
+      "description": "Nome utente."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/seo-optimize/": {
+  "post": {
+   "summary": "Seo optimize",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "post_id": {
+      "type": "integer",
+      "description": "Identificativo del post."
+     },
+     "seo": {
+      "type": "string",
+      "description": "Seo."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/humanize-text/": {
+  "post": {
+   "summary": "Humanize text",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "post_id": {
+      "type": "integer",
+      "description": "Identificativo del post."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/seo/title/{id}/": {
+  "post": {
+   "summary": "Title",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "seo_title": {
+      "type": "string",
+      "description": "Titolo SEO (Rank Math)."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/seo/meta-description/{id}/": {
+  "post": {
+   "summary": "Meta description",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "meta_description": {
+      "type": "string",
+      "description": "Meta description SEO."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/seo/keywords/{id}/": {
+  "post": {
+   "summary": "Keywords",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "focus_keywords": {
+      "type": "string",
+      "description": "Parole chiave di focus per la SEO."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/seo/slug/{id}/": {
+  "post": {
+   "summary": "Slug",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "slug": {
+      "type": "string",
+      "description": "Slug dell'URL."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/get-post/{id}/": {
+  "get": {
+   "summary": "Get post",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/append-content/{id}/": {
+  "post": {
+   "summary": "Append content",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "content": {
+      "type": "string",
+      "description": "Contenuto HTML del post."
+     },
+     "h2_index": {
+      "type": "integer",
+      "description": "H2 index."
+     },
+     "h2_number": {
+      "type": "string",
+      "description": "H2 number."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "position": {
+      "type": "string",
+      "description": "Dove inserire: start, end, before, after."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/replace-html/{id}/": {
+  "post": {
+   "summary": "Replace html",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "new_html": {
+      "type": "string",
+      "description": "New html."
+     },
+     "occurrence_index": {
+      "type": "integer",
+      "description": "Occurrence index."
+     },
+     "old_html": {
+      "type": "string",
+      "description": "Old html."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/extract-image-links/": {
+  "get": {
+   "summary": "Extract image links",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "keyword": {
+      "type": "string",
+      "description": "Parola chiave."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/insert-embed-video/": {
+  "post": {
+   "summary": "Insert embed video",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "post_id": {
+      "type": "integer",
+      "description": "Identificativo del post."
+     },
+     "video_title": {
+      "type": "string",
+      "description": "Video title."
+     },
+     "video_url": {
+      "type": "string",
+      "description": "Indirizzo del video."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/telegram/": {
+  "post": {
+   "summary": "Telegram",
+   "description": "Rotta del plugin. Raccoglie 6 azioni: si sceglie con il campo action.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "forward_message",
+       "get_chat_info",
+       "get_updates",
+       "send_document",
+       "send_message",
+       "send_photo"
+      ],
+      "description": "Azione da eseguire su questa rotta."
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/execute-minecraft-command/": {
+  "post": {
+   "summary": "Execute minecraft command",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "command": {
+      "type": "string",
+      "description": "Command."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/link-scraping/": {
+  "get": {
+   "summary": "Link scraping",
+   "description": "Rotta del plugin. Raccoglie 9 azioni: si sceglie con il campo action.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "extract_emails",
+       "find_expression_in_div",
+       "get_div_classes",
+       "get_div_ids",
+       "get_headers",
+       "get_html_chunks",
+       "get_images",
+       "get_meta_tags",
+       "get_text_chunks"
+      ],
+      "description": "Azione da eseguire su questa rotta."
+     },
+     "analysis_type": {
+      "type": "string",
+      "description": "Tipo di analisi richiesta."
+     },
+     "chunk_index": {
+      "type": "integer",
+      "description": "Blocco da leggere, parte da 0."
+     },
+     "expression": {
+      "type": "string",
+      "description": "Espressione o selettore da applicare."
+     },
+     "link": {
+      "type": "string",
+      "description": "Indirizzo della pagina da leggere."
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/custom-fields/{post_id}/": {
+  "post": {
+   "summary": "Custom fields",
+   "description": "Rotta del plugin. Raccoglie 4 azioni: si sceglie con il campo action.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "create",
+       "list",
+       "update",
+       "view-chunk"
+      ],
+      "description": "Azione da eseguire su questa rotta."
+     },
+     "chunk_index": {
+      "type": "integer",
+      "description": "Blocco da leggere, parte da 0."
+     },
+     "field_key": {
+      "type": "string",
+      "description": "Field key."
+     },
+     "post_id": {
+      "type": "integer",
+      "description": "Identificativo del post."
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/email/": {
+  "post": {
+   "summary": "Email",
+   "description": "Rotta del plugin. Raccoglie 4 azioni: si sceglie con il campo action.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "create_form",
+       "get_form",
+       "list_forms",
+       "update_form"
+      ],
+      "description": "Azione da eseguire su questa rotta."
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/manage-share-post-on-social-network/": {
+  "post": {
+   "summary": "Manage share post on social network",
+   "description": "Rotta del plugin. Raccoglie 4 azioni: si sceglie con il campo action.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "create_form",
+       "get_form",
+       "list_forms",
+       "update_form"
+      ],
+      "description": "Azione da eseguire su questa rotta."
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/create-product/": {
+  "post": {
+   "summary": "Create product",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "categories": {
+      "type": "string",
+      "description": "Categorie, per id o per nome."
+     },
+     "code": {
+      "type": "string",
+      "description": "Code."
+     },
+     "description": {
+      "type": "string",
+      "description": "Descrizione."
+     },
+     "dimensions": {
+      "type": "string",
+      "description": "Dimensions."
+     },
+     "focus_keywords": {
+      "type": "string",
+      "description": "Parole chiave di focus per la SEO."
+     },
+     "gallery_image_urls": {
+      "type": "string",
+      "description": "Gallery image urls."
+     },
+     "image_url": {
+      "type": "string",
+      "description": "Indirizzo dell'immagine."
+     },
+     "meta_description": {
+      "type": "string",
+      "description": "Meta description SEO."
+     },
+     "name": {
+      "type": "string",
+      "description": "Nome."
+     },
+     "price": {
+      "type": "string",
+      "description": "Prezzo."
+     },
+     "regular_price": {
+      "type": "string",
+      "description": "Regular price."
+     },
+     "sale_price": {
+      "type": "string",
+      "description": "Sale price."
+     },
+     "seo_title": {
+      "type": "string",
+      "description": "Titolo SEO (Rank Math)."
+     },
+     "short_description": {
+      "type": "string",
+      "description": "Short description."
+     },
+     "sku": {
+      "type": "string",
+      "description": "Codice SKU."
+     },
+     "slug": {
+      "type": "string",
+      "description": "Slug dell'URL."
+     },
+     "stock_quantity": {
+      "type": "string",
+      "description": "Stock quantity."
+     },
+     "stock_status": {
+      "type": "string",
+      "description": "Stock status."
+     },
+     "tags": {
+      "type": "string",
+      "description": "Tag, per id o per nome."
+     },
+     "weight": {
+      "type": "string",
+      "description": "Weight."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-product/{id}/": {
+  "post": {
+   "summary": "Update product",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "attributes": {
+      "type": "string",
+      "description": "Attributes."
+     },
+     "categories": {
+      "type": "string",
+      "description": "Categorie, per id o per nome."
+     },
+     "code": {
+      "type": "string",
+      "description": "Code."
+     },
+     "codes": {
+      "type": "string",
+      "description": "Codes."
+     },
+     "description": {
+      "type": "string",
+      "description": "Descrizione."
+     },
+     "dimensions": {
+      "type": "string",
+      "description": "Dimensions."
+     },
+     "focus_keywords": {
+      "type": "string",
+      "description": "Parole chiave di focus per la SEO."
+     },
+     "gallery_image_urls": {
+      "type": "string",
+      "description": "Gallery image urls."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "image_url": {
+      "type": "string",
+      "description": "Indirizzo dell'immagine."
+     },
+     "meta_description": {
+      "type": "string",
+      "description": "Meta description SEO."
+     },
+     "name": {
+      "type": "string",
+      "description": "Nome."
+     },
+     "price": {
+      "type": "string",
+      "description": "Prezzo."
+     },
+     "purchase_note": {
+      "type": "string",
+      "description": "Purchase note."
+     },
+     "regular_price": {
+      "type": "string",
+      "description": "Regular price."
+     },
+     "sale_price": {
+      "type": "string",
+      "description": "Sale price."
+     },
+     "seo_title": {
+      "type": "string",
+      "description": "Titolo SEO (Rank Math)."
+     },
+     "short_description": {
+      "type": "string",
+      "description": "Short description."
+     },
+     "sku": {
+      "type": "string",
+      "description": "Codice SKU."
+     },
+     "slug": {
+      "type": "string",
+      "description": "Slug dell'URL."
+     },
+     "stock_quantity": {
+      "type": "string",
+      "description": "Stock quantity."
+     },
+     "stock_status": {
+      "type": "string",
+      "description": "Stock status."
+     },
+     "tags": {
+      "type": "string",
+      "description": "Tag, per id o per nome."
+     },
+     "weight": {
+      "type": "string",
+      "description": "Weight."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/add-category-on-product/{id}/": {
+  "post": {
+   "summary": "Add category on product",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "category_id": {
+      "type": "integer",
+      "description": "Category id."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-featured-image-product/{id}/": {
+  "post": {
+   "summary": "Update featured image product",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "image_url": {
+      "type": "string",
+      "description": "Indirizzo dell'immagine."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-image-in-gallery/{id}/": {
+  "post": {
+   "summary": "Update image in gallery",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "gallery_image_url": {
+      "type": "string",
+      "description": "Gallery image url."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-metadescription-product/{id}/": {
+  "post": {
+   "summary": "Update metadescription product",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "meta_description": {
+      "type": "string",
+      "description": "Meta description SEO."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-seo-title-product/{id}/": {
+  "post": {
+   "summary": "Update seo title product",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "focus_keywords": {
+      "type": "string",
+      "description": "Parole chiave di focus per la SEO."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "meta_description": {
+      "type": "string",
+      "description": "Meta description SEO."
+     },
+     "seo_title": {
+      "type": "string",
+      "description": "Titolo SEO (Rank Math)."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-short-description/{id}/": {
+  "post": {
+   "summary": "Update short description",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "short_description": {
+      "type": "string",
+      "description": "Short description."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-long-description/{id}/": {
+  "post": {
+   "summary": "Update long description",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "description": {
+      "type": "string",
+      "description": "Descrizione."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "long_description": {
+      "type": "string",
+      "description": "Long description."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-product-price/{id}/": {
+  "post": {
+   "summary": "Update product price",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "price": {
+      "type": "string",
+      "description": "Prezzo."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-product-offer-price/{id}/": {
+  "post": {
+   "summary": "Update product offer price",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "offer_price": {
+      "type": "string",
+      "description": "Offer price."
+     },
+     "sale_price": {
+      "type": "string",
+      "description": "Sale price."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-gtin-code/{id}/": {
+  "post": {
+   "summary": "Update gtin code",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "codes": {
+      "type": "string",
+      "description": "Codes."
+     },
+     "gtin": {
+      "type": "string",
+      "description": "Gtin."
+     },
+     "gtin_code": {
+      "type": "string",
+      "description": "Gtin code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "sku": {
+      "type": "string",
+      "description": "Codice SKU."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/insert-link-in-product/{id}/": {
+  "post": {
+   "summary": "Insert link in product",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "link": {
+      "type": "string",
+      "description": "Indirizzo della pagina da leggere."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/append-html-in-long-description/{id}/": {
+  "post": {
+   "summary": "Append html in long description",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "html_content": {
+      "type": "string",
+      "description": "Html content."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/append-video-in-long-description/{id}/": {
+  "post": {
+   "summary": "Append video in long description",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "video_url": {
+      "type": "string",
+      "description": "Indirizzo del video."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/replace-html-in-long-description/{id}/": {
+  "post": {
+   "summary": "Replace html in long description",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "new_html": {
+      "type": "string",
+      "description": "New html."
+     },
+     "occurrence_index": {
+      "type": "integer",
+      "description": "Occurrence index."
+     },
+     "old_html": {
+      "type": "string",
+      "description": "Old html."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/get-orders/": {
+  "get": {
+   "summary": "Get orders",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "limit": {
+      "type": "integer",
+      "description": "Quanti elementi al massimo."
+     },
+     "status": {
+      "type": "string",
+      "description": "Stato del post: publish, draft, pending, private."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/get-order/{id}/": {
+  "get": {
+   "summary": "Get order",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/update-order/{id}/": {
+  "post": {
+   "summary": "Update order",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "customer_note": {
+      "type": "string",
+      "description": "Customer note."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "status": {
+      "type": "string",
+      "description": "Stato del post: publish, draft, pending, private."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/insert-image-product/{id}/": {
+  "post": {
+   "summary": "Insert image product",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "image_url": {
+      "type": "string",
+      "description": "Indirizzo dell'immagine."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/insert-image-in-gallery-product/{id}/": {
+  "post": {
+   "summary": "Insert image in gallery product",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     },
+     "image_url": {
+      "type": "string",
+      "description": "Indirizzo dell'immagine."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/notify-product/": {
+  "post": {
+   "summary": "Notify product",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "product_id": {
+      "type": "integer",
+      "description": "Identificativo del prodotto."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/notify-post/": {
+  "post": {
+   "summary": "Notify post",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "post_id": {
+      "type": "integer",
+      "description": "Identificativo del post."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/serpapi-keyword-analysis/": {
+  "get": {
+   "summary": "Serpapi keyword analysis",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "keyword": {
+      "type": "string",
+      "description": "Parola chiave."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/manage-structure-theme-plugin-page-template-with-user-code/": {
+  "post": {
+   "summary": "Manage structure theme plugin page template with user code",
+   "description": "Rotta del plugin. Raccoglie 35 azioni: si sceglie con il campo action.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "activate-site-template",
+       "assign-menu",
+       "block-add-block",
+       "block-create-template-part",
+       "block-get-pattern",
+       "block-get-template",
+       "block-get-template-part",
+       "block-list-template-parts",
+       "block-list-templates",
+       "block-remove-block",
+       "block-update-block",
+       "block-update-template",
+       "block-update-template-part",
+       "classic-add-widget",
+       "classic-get-area",
+       "classic-list-areas",
+       "classic-list-footer",
+       "classic-list-widgets",
+       "classic-move-widget",
+       "classic-remove-widget",
+       "classic-reorder-widgets",
+       "classic-update-widget",
+       "create-chield-template-from-template",
+       "describe-wordpress-configuration",
+       "disable-plugin",
+       "install-plugin",
+       "list-disponible-plugin",
+       "list-installed-templates",
+       "list-menu-locations",
+       "plugin-info",
+       "search-plugin-in-store",
+       "search-template-store",
+       "upload-template-file",
+       "view-active-template",
+       "view-that-template-have-chield"
+      ],
+      "description": "Azione da eseguire su questa rotta."
+     },
+     "sidebar_id": {
+      "type": "integer",
+      "description": "Sidebar id."
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/manage-function-and-css-of-active-template-with-user-code/": {
+  "post": {
+   "summary": "Manage function and css of active template with user code",
+   "description": "Rotta del plugin. Raccoglie 4 azioni: si sceglie con il campo action.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "create_form",
+       "get_form",
+       "list_forms",
+       "update_form"
+      ],
+      "description": "Azione da eseguire su questa rotta."
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/translate/": {
+  "post": {
+   "summary": "Translate",
+   "description": "Rotta del plugin. Raccoglie 4 azioni: si sceglie con il campo action.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "create_form",
+       "get_form",
+       "list_forms",
+       "update_form"
+      ],
+      "description": "Azione da eseguire su questa rotta."
+     }
+    },
+    "required": [
+     "user_code",
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/vector-files/": {
+  "post": {
+   "summary": "Vector files",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "file_url": {
+      "type": "string",
+      "description": "File url."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/vector-files/{id}/": {
+  "delete": {
+   "summary": "Vector files",
+   "description": "Rotta del plugin. I parametri elencati sono quelli che la rotta legge davvero.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "user_code": {
+      "type": "string",
+      "description": "Codice utente del giorno. In alternativa nell'intestazione X-User-Code."
+     },
+     "id": {
+      "type": "integer",
+      "description": "Identificativo della risorsa."
+     }
+    },
+    "required": [
+     "user_code"
+    ]
+   }
+  }
+ },
+ "/v1/manage-homeassistant-dashboard-and-entities": {
+  "post": {
+   "summary": "Legge e comanda Home Assistant: entita', telecamere, calendari, scene, script e assistenti vocali",
+   "description": "Il ponte verso l'impianto domotico. Le azioni di lettura (get-*) non cambiano niente; control-entity e send-command-to-assistant AGISCONO sull'impianto, quindi vanno usate solo quando l'utente lo ha chiesto esplicitamente.",
+   "parameters": [],
+   "body": {
+    "properties": {
+     "action": {
+      "type": "string",
+      "description": "Azione da eseguire.\n- `get-entities` elenca le entita'; con `search` filtra per nome o id.\n- `control-entity` chiama un servizio di Home Assistant: richiede `domain`, `service` e di norma `entity_id`. Per accendere un condizionatore: `domain: climate`, `service: turn_on`, `entity_id: climate.<nome>`. Per spegnerlo `service: turn_off`; per la modalita' `service: set_hvac_mode` con `hvac_mode` fra quelle che l'entita' dichiara; per la temperatura `service: set_temperature` con `temperature`. AGISCE DAVVERO.\n- `get-history` lo storico di un'entita': richiede `entity_id`, accetta `start` e `end`.\n- `get-logbook` il diario degli eventi; accetta `start`, `end`, `limit`.\n- `get-camera-list` elenca le telecamere; `get-camera-screen` cattura un fotogramma da `entity_id`.\n- `get-calendars` elenca i calendari; `get-calendar-events` gli eventi, con `start` e `end`.\n- `get-scene`, `get-script`, `get-automation` elencano scene, script e automazioni.\n- `get-assistant-list` elenca gli assistenti vocali configurati.\n- `send-command-to-assistant` invia una frase a un assistente: richiede `agent_id` e `text`. AGISCE.\n- `get-shortcode` restituisce lo shortcode per incorporare l'entita' in una pagina.\n- `search` cerca fra le entita' per nome.\n",
+      "enum": [
+       "get-entities",
+       "control-entity",
+       "get-history",
+       "get-logbook",
+       "get-camera-list",
+       "get-camera-screen",
+       "get-calendars",
+       "get-calendar-events",
+       "get-scene",
+       "get-script",
+       "get-automation",
+       "get-assistant-list",
+       "send-command-to-assistant",
+       "get-shortcode",
+       "search"
+      ]
+     },
+     "entity_id": {
+      "type": "string",
+      "description": "L'entita' di Home Assistant, es. `light.cucina`. Serve a control-entity, get-history, get-camera-screen, get-shortcode."
+     },
+     "agent_id": {
+      "type": "string",
+      "description": "L'assistente vocale a cui parlare (send-command-to-assistant)."
+     },
+     "text": {
+      "type": "string",
+      "description": "La frase da dire all'assistente (send-command-to-assistant)."
+     },
+     "start": {
+      "type": "string",
+      "description": "Inizio dell'intervallo, ISO 8601. Per storico, diario ed eventi."
+     },
+     "end": {
+      "type": "string",
+      "description": "Fine dell'intervallo, ISO 8601."
+     },
+     "limit": {
+      "type": "integer",
+      "description": "Quanti elementi al massimo."
+     },
+     "page": {
+      "type": "integer",
+      "description": "Pagina dei risultati, per gli elenchi lunghi."
+     },
+     "timestamp": {
+      "type": "string",
+      "description": "Istante preciso, dove l'azione lo prevede."
+     },
+     "domain": {
+      "type": "string",
+      "description": "Il dominio del servizio: `climate`, `light`, `switch`, `media_player`… Obbligatorio per control-entity."
+     },
+     "service": {
+      "type": "string",
+      "description": "Il servizio da chiamare dentro quel dominio: `turn_on`, `turn_off`, `set_temperature`, `set_hvac_mode`… Obbligatorio per control-entity."
+     },
+     "payload": {
+      "type": "object",
+      "description": "Parametri aggiuntivi del servizio. Qualunque campo non riconosciuto viene passato al servizio cosi' com'e'."
+     }
+    },
+    "required": [
+     "action"
+    ]
+   }
+  }
+ },
+ "/v1/manage-casa-stanze-dispositivi-e-pagine": {
+  "post": {
+   "summary": "Com'e' fatta la casa: stanze, dispositivi, dove sta una cosa, e le pagine che la mostrano",
+   "description": "Completa la rotta dell'impianto domotico, non la sostituisce: li' si accende e si spegne, qui si guarda dove stanno le cose e si costruiscono le pagine. Le stanze create e gli spostamenti finiscono dritti nel registro di Home Assistant, che e' l'unico posto dove vivono - non esiste una copia locale che possa divergere.",
+   "parameters": [],
+   "body": {
+    "required": [
+     "action"
+    ],
+    "properties": {
+     "action": {
+      "type": "string",
+      "enum": [
+       "stanze",
+       "dispositivi",
+       "cerca",
+       "card-disponibili",
+       "sposta-dispositivo",
+       "crea-stanza",
+       "crea-pagina"
+      ],
+      "description": "Azione da eseguire. - `stanze` Le stanze della casa, con quanti dispositivi contengono e se hanno gia' una pagina. E' il punto di partenza: gli id che torna si usano in tutte le altre azioni. - `dispositivi` Cosa c'e' dentro una stanza. Vuole 'stanza' (id o nome). - `cerca` Cerca in casa PER PAROLE e non per frase: 'la lampada del soggiorno' non e' il nome di nessuna entita' e cercata cosi' non torna niente. Vuole 'query'; con 'stanza' cerca solo li'. - `card-disponibili` Che aspetto puo' avere un'entita' dentro una pagina. Senza 'entity_id' torna l'elenco per dominio. - `sposta-dispositivo` Sposta un dispositivo in un'altra stanza. Con un entity_id sposta il DISPOSITIVO INTERO a cui appartiene, se no un condizionatore lascerebbe indietro temperatura e consumi. Vuole 'dispositivo' e 'stanza'. - `crea-stanza` Crea una stanza in Home Assistant. Se c'e' gia' non fa niente e lo dice. Vuole 'nome'. - `crea-pagina` Crea una pagina con dentro SOLO le card scelte: serve al caso opposto della pagina di stanza, tipo 'i quattro condizionatori' che stanno in quattro stanze diverse. Vuole 'titolo' e 'entita'."
+     },
+     "stanza": {
+      "type": "string",
+      "description": "Id o nome della stanza, come li torna action=stanze."
+     },
+     "query": {
+      "type": "string",
+      "description": "Le parole da cercare. Quelle sotto le tre lettere si scartano: compaiono ovunque e sporcherebbero l'ordine."
+     },
+     "limit": {
+      "type": "integer",
+      "description": "Quanti risultati per action=cerca, al massimo cinquanta."
+     },
+     "entity_id": {
+      "type": "string",
+      "description": "L'entita' di cui si vogliono le card possibili."
+     },
+     "dispositivo": {
+      "type": "string",
+      "description": "device_id, oppure un entity_id: in quel caso si risale al dispositivo."
+     },
+     "nome": {
+      "type": "string",
+      "description": "Come si chiama la stanza da creare."
+     },
+     "titolo": {
+      "type": "string",
+      "description": "Titolo della pagina da creare."
+     },
+     "entita": {
+      "type": "array",
+      "description": "Elenco di entity_id, oppure di oggetti {entity_id, card} per scegliere anche l'aspetto."
+     }
+    }
+   }
+  }
+ }
+}

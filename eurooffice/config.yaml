@@ -1,0 +1,28 @@
+name: "EuroOffice Document Server"
+description: "Collaborative ONLYOFFICE-based document server for Home Assistant."
+version: "1.0.5"
+slug: "eurooffice"
+init: false
+arch:
+  - amd64
+startup: services
+boot: auto
+map:
+  - config:rw
+  - share:rw
+options:
+  jwt_enabled: true
+  jwt_secret: "my_jwt_secret"
+  example_enabled: true
+schema:
+  jwt_enabled: bool
+  jwt_secret: password
+  example_enabled: bool
+ports:
+  80/tcp: 8080
+  3000/tcp: 3000
+ports_description:
+  80/tcp: Document Server
+  3000/tcp: Example Application
+panel_icon: "mdi:file-document-edit"
+panel_title: "EuroOffice"

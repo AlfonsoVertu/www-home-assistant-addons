@@ -1,0 +1,3 @@
+build_from:
+  amd64: ghcr.io/alam00000/bentopdf-simple:v2.8.10
+  aarch64: ghcr.io/alam00000/bentopdf-simple:v2.8.10

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <title>WWWW MediaUploader</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 12px; width: 380px; }
+    h1 { font-size: 16px; margin: 0 0 10px; display:flex; align-items:center; gap:8px; }
+    .logos { display:flex; gap:6px; }
+    .logos img { width:20px; height:20px; }
+    label { display:block; font-size: 12px; margin-top: 8px; }
+    input, select, textarea { width: 100%; box-sizing: border-box; margin-top: 4px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .inline { display:flex; gap:8px; align-items:center; }
+    button { margin-top: 12px; width: 100%; padding: 8px; }
+    pre { background: #111; color: #d2ffd2; padding: 8px; max-height: 180px; overflow:auto; font-size:11px; }
+  </style>
+</head>
+<body>
+  <h1>
+    WWWW MediaUploader
+    <span class="logos">
+      <img src="icons/logo-blue.svg" alt="logo blue" />
+      <img src="icons/logo-gold.svg" alt="logo gold" />
+    </span>
+  </h1>
+
+  <label>Site URL<input id="siteUrl" placeholder="https://example.com" /></label>
+  <label>User code<input id="userCode" /></label>
+  <label>Bearer token<input id="bearerToken" /></label>
+  <div class="row">
+    <label>MIME type
+      <select id="mimeType">
+        <option value="image/png">image/png</option>
+        <option value="image/jpeg">image/jpeg</option>
+        <option value="image/jpg">image/jpg</option>
+        <option value="image/webp">image/webp</option>
+        <option value="image/gif">image/gif</option>
+      </select>
+    </label>
+    <label>Nome file<input id="fileName" /></label>
+  </div>
+  <label>Scegli file<input id="fileInput" type="file" accept="image/*" multiple /></label>
+  <div class="row">
+    <label>Tipo contenuto
+      <select id="contentType">
+        <option value="article">articolo</option>
+        <option value="page">pagina</option>
+        <option value="product">prodotto</option>
+      </select>
+    </label>
+    <label>ID contenuto<input id="contentId" type="number" min="1" /></label>
+  </div>
+  <label>Titolo SEO<input id="seoTitle" /></label>
+  <div class="inline"><input type="checkbox" id="featured" /> <label for="featured">featured image</label></div>
+  <div class="inline"><input type="checkbox" id="insertContent" /> <label for="insertContent">inserisci nel contenuto</label></div>
+  <div class="inline"><input type="checkbox" id="gallery" /> <label for="gallery">galleria prodotto</label></div>
+  <label>Posizione contenuto
+    <select id="insertPosition">
+      <option value="end">end</option>
+      <option value="start">start</option>
+      <option value="before">before H2</option>
+      <option value="after">after H2</option>
+    </select>
+  </label>
+  <label>H2 index (per before/after)<input id="h2Index" type="number" min="1" value="1" /></label>
+  <button id="uploadBtn">Upload chunked</button>
+  <pre id="log">In attesa...</pre>
+  <script src="popup.js"></script>
+</body>
+</html>

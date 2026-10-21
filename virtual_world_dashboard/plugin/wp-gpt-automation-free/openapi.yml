@@ -1,0 +1,668 @@
+# GENERATO da tools/genera-openapi-dalle-azioni.php - non modificare a mano.
+# Si rigenera con: php tools/genera-openapi-dalle-azioni.php
+openapi: 3.1.0
+info:
+  version: 2.5.2
+  title: WordPress Automation Architect
+  description: "Un endpoint per ogni strumento, e dentro ogni strumento tante action. Il parametro action decide l operazione e quali altri parametri servono. Per sapere cosa esiste si chiama tools-manifest."
+  contact:
+    name: Supporto
+    url: https://workingwithweb.it/webagency
+servers:
+  - url: "{sito}/wp-json/wp-gpt"
+    variables:
+      sito:
+        default: https://esempio.it
+        description: "L indirizzo del sito WordPress su cui gira il plugin. La guida in backend lo sostituisce con quello vero."
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+# GENERATO da tools/genera-openapi-dalle-azioni.php - non modificare a mano.
+# La fonte sono le dichiarazioni in includes/azioni-*.php, che stanno
+# accanto alle rotte e cambiano con loro.
+paths:
+  /v1/tools-manifest:
+    post:
+      operationId: toolsManifest
+      summary: "L'attrezzo per orientarsi: elenca i tool di questo sito, le action di ognuno e i parametri di ogni action."
+      description: "L'attrezzo per orientarsi: elenca i tool di questo sito, le action di ognuno e i parametri di ogni action. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["lista-dei-tool-che-contengono-le-action", "scopri-parametri-dei-tool", "scopri-parametri-di-un-action-in-un-tool", "istruzioni", "schema", "stretta-di-mano"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                cerca:
+                  type: string
+                  description: "Opzionale per: lista-dei-tool-che-contengono-le-action. Filtra per nome o descrizione. Accetta un pezzo di parola, e perdona una lettera fuori posto."
+                pagina:
+                  type: integer
+                  description: "Opzionale per: lista-dei-tool-che-contengono-le-action. Pagina da leggere, a partire da 1."
+                per_pagina:
+                  type: integer
+                  description: "Opzionale per: lista-dei-tool-che-contengono-le-action. Quanti tool per pagina."
+                tool:
+                  type: string
+                  description: "Obbligatorio per: scopri-parametri-dei-tool, scopri-parametri-di-un-action-in-un-tool. Opzionale per: schema. scopri-parametri-dei-tool: Il nome del tool, che e' il nome della sua rotta. scopri-parametri-di-un-action-in-un-tool: Il nome del tool. schema: Limita lo schema a un tool solo."
+                nome_action:
+                  type: string
+                  description: "Obbligatorio per: scopri-parametri-di-un-action-in-un-tool. L'action da aprire."
+                odoo_url:
+                  type: string
+                  description: "Obbligatorio per: stretta-di-mano. L'indirizzo a cui questo sito ti richiamera'."
+                odoo_token:
+                  type: string
+                  description: "Obbligatorio per: stretta-di-mano. Il token con cui ti riconoscerai."
+                odoo_user_code:
+                  type: string
+                  description: "Obbligatorio per: stretta-di-mano. Il tuo codice utente."
+                riferimento:
+                  type: string
+                  description: "Opzionale per: stretta-di-mano. Un'etichetta tua, per ritrovare l'accordo."
+  /v1/memory/goal:
+    post:
+      operationId: goal
+      summary: "Tiene gli obiettivi e i passi per arrivarci: li crea, ne segue lo stato e dice a che punto sono."
+      description: "Tiene gli obiettivi e i passi per arrivarci: li crea, ne segue lo stato e dice a che punto sono. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["list_goals", "get_goal", "create_goal", "update_goal", "delete_goal", "hard_delete_goal", "delete_all_goals", "get_status", "list_steps", "get_step", "add_step", "update_step", "delete_step", "hard_delete_step", "delete_all_steps", "hard_delete_steps_by_goal", "get_chunked_response", "delete_chunk"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                limit:
+                  type: integer
+                  description: "Opzionale per: list_goals, list_steps. Quanti risultati per volta."
+                offset:
+                  type: integer
+                  description: "Opzionale per: list_goals, list_steps. Da quale risultato cominciare, per scorrere le pagine."
+                status:
+                  type: string
+                  description: "Opzionale per: list_goals, update_goal, list_steps, add_step, update_step. list_goals/list_steps: Restringe a uno stato. update_goal: A che punto e l obiettivo. add_step: A che punto e il passo. update_step: Lo stato nuovo."
+                include_deleted:
+                  type: boolean
+                  description: "Opzionale per: list_goals, list_steps. Se mostrare anche quelli messi da parte con delete."
+                goal_id:
+                  type: integer
+                  description: "Obbligatorio per 9 action su 18. Id dell obiettivo, preso da list_goals."
+                goal_title:
+                  type: string
+                  description: "Obbligatorio per: create_goal. Opzionale per: update_goal. Come si chiama l obiettivo."
+                goal_type:
+                  type: string
+                  description: "Opzionale per: create_goal, update_goal. Di che genere e l obiettivo."
+                keyword:
+                  type: string
+                  description: "Opzionale per: create_goal, update_goal. Una parola per ritrovarlo."
+                meta:
+                  type: object
+                  description: "Opzionale per: create_goal, update_goal, add_step, update_step. create_goal/update_goal: Dati in piu da tenere insieme all obiettivo. add_step: Dati in piu da tenere insieme al passo. update_step: Dati in piu."
+                hard:
+                  type: boolean
+                  description: "Opzionale per: delete_all_goals, delete_all_steps. Vero per cancellare davvero invece di mettere da parte."
+                step_id:
+                  type: integer
+                  description: "Obbligatorio per: get_step, update_step, delete_step, hard_delete_step. Id del passo, preso da list_steps."
+                step_label:
+                  type: string
+                  description: "Obbligatorio per: add_step. Opzionale per: update_step. add_step: Cosa dice il passo. update_step: Il testo nuovo del passo."
+                step_type:
+                  type: string
+                  description: "Opzionale per: add_step, update_step. add_step: Di che genere e il passo. update_step: Il genere del passo."
+                chunk_key:
+                  type: string
+                  description: "Obbligatorio per: get_chunked_response, delete_chunk. get_chunked_response: La chiave restituita dalla risposta troncata. delete_chunk: La chiave della risposta da buttare."
+                chunk_index:
+                  type: integer
+                  description: "Opzionale per: get_chunked_response. Quale pezzo leggere, da 0."
+  /v1/gather-information-youtube-google-serp-keywrd-analisys-image-link:
+    post:
+      operationId: gatherInformationYoutubeGoogleSerpKeywrdAnalisysImageLink
+      summary: "Cerca informazioni fuori dal sito: risultati di Google, notizie, immagini, tendenze, mappe, video di YouTube e trascrizioni."
+      description: "Cerca informazioni fuori dal sito: risultati di Google, notizie, immagini, tendenze, mappe, video di YouTube e trascrizioni. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["youtube-transcription", "search-youtube-video", "extract-image-links", "serpapi-serp-analysis", "seo_analisys_serpapi_google_search", "seo_analisys_serpapi_google_images", "seo_analisys_serpapi_google_news", "seo_analisys_serpapi_google_trends", "seo_analisys_serpapi_google_shopping", "seo_analisys_serpapi_google_scholar", "seo_analisys_serpapi_google_maps", "seo_analisys_serpapi_google_ai_overview", "google_related_questions_api", "google_autocomplete_api"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                video_url:
+                  type: string
+                  description: "Obbligatorio per: youtube-transcription. Indirizzo del video."
+                chunk_index:
+                  type: integer
+                  description: "Opzionale per: youtube-transcription, serpapi-serp-analysis. youtube-transcription: Quale pezzo della trascrizione leggere, da 0. Le trascrizioni lunghe non entrano in una risposta sola. serpapi-serp-analysis: Quale pezzo dei risultati leggere, da 0."
+                query:
+                  type: string
+                  description: "Obbligatorio per: search-youtube-video, google_related_questions_api. Opzionale per: seo_analisys_serpapi_google_images, seo_analisys_serpapi_google_scholar, seo_analisys_serpapi_google_maps, google_autocomplete_api. search-youtube-video: Cosa cercare. Qui il parametro si chiama query, non keyword. seo_analisys_serpapi_google_images/seo_analisys_serpapi_google_scholar/seo_analisys_serpapi_google_maps/google_autocomplete_api: Nome alternativo di keyword. google_related_questions_api: Da quale ricerca partire."
+                keyword:
+                  type: string
+                  description: "Obbligatorio per 11 action su 14. Le parole da cercare."
+                language:
+                  type: string
+                  description: "Opzionale per 11 action. Lingua dei risultati, per esempio it. Cambia cosa si trova, non solo come e scritto."
+                country:
+                  type: string
+                  description: "Opzionale per 11 action. Paese da cui si cerca, per esempio it: i risultati di Google cambiano parecchio da un paese all altro."
+                location:
+                  type: string
+                  description: "Opzionale per 9 action. Citta o zona da cui simulare la ricerca, per i risultati locali."
+                hl:
+                  type: string
+                  description: "Opzionale per: serpapi-serp-analysis. Lingua dell interfaccia di ricerca, due lettere."
+                gl:
+                  type: string
+                  description: "Opzionale per: serpapi-serp-analysis. Paese da cui si cerca, due lettere."
+                chunk_size:
+                  type: integer
+                  description: "Opzionale per: serpapi-serp-analysis. Quanti risultati per pezzo."
+                page_number:
+                  type: integer
+                  description: "Opzionale per 7 action. Pagina dei risultati, da 1."
+                results_per_page:
+                  type: integer
+                  description: "Opzionale per 8 action. Quanti risultati per pagina."
+                device:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_search, seo_analisys_serpapi_google_images, seo_analisys_serpapi_google_shopping. Se cercare come da telefono o da computer: i risultati differiscono."
+                safe_search:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_search, seo_analisys_serpapi_google_images, seo_analisys_serpapi_google_news, seo_analisys_serpapi_google_shopping. Filtro dei contenuti per adulti."
+                time_filter:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_search, seo_analisys_serpapi_google_images, seo_analisys_serpapi_google_news. Limita ai risultati di un periodo, per esempio l ultimo mese."
+                output_format:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_search. In che forma restituire i risultati."
+                api_domain:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_search. Quale dominio di Google interrogare, per esempio google.it."
+                category:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_news, seo_analisys_serpapi_google_trends. seo_analisys_serpapi_google_news: Categoria di notizie. seo_analisys_serpapi_google_trends: Categoria merceologica."
+                geo:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_news, seo_analisys_serpapi_google_trends. seo_analisys_serpapi_google_news: Zona geografica delle notizie. seo_analisys_serpapi_google_trends: Zona geografica."
+                trend_type:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_news, seo_analisys_serpapi_google_trends. seo_analisys_serpapi_google_news: Tipo di andamento da guardare. seo_analisys_serpapi_google_trends: Tipo di andamento."
+                date_range:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_trends. Periodo da osservare."
+                shopping_condition:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_trends, seo_analisys_serpapi_google_shopping. seo_analisys_serpapi_google_trends: Condizione del prodotto, per le tendenze di acquisto. seo_analisys_serpapi_google_shopping: Nuovo o usato."
+                author_id:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_scholar. Cerca i lavori di un autore preciso."
+                cite_id:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_scholar. Le citazioni di un lavoro preciso."
+                cluster_id:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_scholar. Le versioni di uno stesso lavoro."
+                type:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_scholar, seo_analisys_serpapi_google_maps. seo_analisys_serpapi_google_scholar: Che genere di ricerca fare. seo_analisys_serpapi_google_maps: Tipo di ricerca sulla mappa."
+                latitude:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_scholar, seo_analisys_serpapi_google_maps. seo_analisys_serpapi_google_scholar: Latitudine. seo_analisys_serpapi_google_maps: Latitudine del punto da cui cercare."
+                longitude:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_scholar, seo_analisys_serpapi_google_maps. seo_analisys_serpapi_google_scholar: Longitudine. seo_analisys_serpapi_google_maps: Longitudine del punto da cui cercare."
+                zoom_level:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_maps. Quanto stretta e la zona: cambia quante attivita si vedono."
+                data_type:
+                  type: string
+                  description: "Opzionale per: seo_analisys_serpapi_google_maps. Che dati chiedere della scheda."
+                next_page_token:
+                  type: string
+                  description: "Opzionale per: google_related_questions_api. Il segnaposto restituito dalla chiamata precedente, per avere le domande successive."
+  /v1/webpage-link-and-twitter-scraping:
+    post:
+      operationId: webpageLinkAndTwitterScraping
+      summary: "Legge una pagina web e ne estrae parti - immagini, intestazioni, email, testo - oppure legge un profilo o un tweet di Twitter."
+      description: "Legge una pagina web e ne estrae parti - immagini, intestazioni, email, testo - oppure legge un profilo o un tweet di Twitter. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["get-images", "get-meta-tags", "get-headers", "extract-emails", "get-div-ids", "get-div-classes", "find-expression-in-div", "get-text-chunks", "get-html-chunks", "scrape-twitter-profile-or-tweet"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                link:
+                  type: string
+                  description: "Obbligatorio per 9 action su 10. Indirizzo completo della pagina da leggere, con http o https."
+                expression:
+                  type: string
+                  description: "Obbligatorio per: find-expression-in-div. Il testo o l'espressione da cercare."
+                chunk_index:
+                  type: integer
+                  description: "Opzionale per: get-text-chunks, get-html-chunks. Quale pezzo del risultato leggere quando e' troppo lungo per una risposta sola. Si parte da 0."
+                username:
+                  type: string
+                  description: "Obbligatorio per: scrape-twitter-profile-or-tweet. Il nome utente, senza la chiocciola."
+                tweet_id:
+                  type: string
+                  description: "Opzionale per: scrape-twitter-profile-or-tweet. L'id di un tweet: senza, si legge il profilo."
+                comments_limit:
+                  type: integer
+                  description: "Opzionale per: scrape-twitter-profile-or-tweet. Quanti commenti leggere al massimo."
+  /v1/manage-file:
+    post:
+      operationId: manageFile
+      summary: "Manda file e immagini al sito, in un colpo solo o a pezzi quando sono troppo grandi per una chiamata sola."
+      description: "Manda file e immagini al sito, in un colpo solo o a pezzi quando sono troppo grandi per una chiamata sola. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["send-file", "send-image-base-64", "send-image-base-64-in-chunk"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                openaiFileIdRefs:
+                  type: array
+                  items:
+                    type: string
+                  description: "Obbligatorio per: send-file. I riferimenti ai file da caricare, almeno uno."
+                content_base64:
+                  type: string
+                  description: "Obbligatorio per: send-image-base-64. Il contenuto dell immagine codificato in base64."
+                filename:
+                  type: string
+                  description: "Obbligatorio per: send-image-base-64, send-image-base-64-in-chunk. Il nome del file, estensione compresa."
+                mime_type:
+                  type: string
+                  description: "Obbligatorio per: send-image-base-64, send-image-base-64-in-chunk. Che tipo di file e. Solo immagini: png, jpeg, jpg, webp o gif. Qualunque altro tipo viene rifiutato."
+                title:
+                  type: string
+                  description: "Opzionale per: send-image-base-64, send-image-base-64-in-chunk. Il titolo con cui l immagine entra nella libreria del sito."
+                alt:
+                  type: string
+                  description: "Opzionale per: send-image-base-64, send-image-base-64-in-chunk. La descrizione per chi non vede l immagine. Serve a chi usa un lettore di schermo, e i motori di ricerca la leggono."
+                caption:
+                  type: string
+                  description: "Opzionale per: send-image-base-64, send-image-base-64-in-chunk. La didascalia mostrata sotto l immagine."
+                description:
+                  type: string
+                  description: "Opzionale per: send-image-base-64, send-image-base-64-in-chunk. Una descrizione piu lunga, nella libreria del sito."
+                chunk_base64:
+                  type: string
+                  description: "Obbligatorio per: send-image-base-64-in-chunk. Questo pezzo dell immagine, codificato in base64."
+                chunk_index:
+                  type: integer
+                  description: "Obbligatorio per: send-image-base-64-in-chunk. Quale pezzo e questo, da 0."
+                total_chunks:
+                  type: integer
+                  description: "Obbligatorio per: send-image-base-64-in-chunk. Quanti pezzi in tutto."
+                upload_id:
+                  type: string
+                  description: "Opzionale per: send-image-base-64-in-chunk. Il codice che tiene insieme i pezzi della stessa immagine. Va ripetuto uguale a ogni pezzo, altrimenti i pezzi non si ritrovano fra loro."
+                is_last_chunk:
+                  type: boolean
+                  description: "Opzionale per: send-image-base-64-in-chunk. Vero sull ultimo pezzo: e quello che fa mettere insieme l immagine."
+  /v1/manage-casa-stanze-dispositivi-e-pagine:
+    post:
+      operationId: manageCasaStanzeDispositiviEPagine
+      summary: "Com'e' fatta la casa: quali stanze esistono, cosa c'e' in ognuna, dove sta una cosa che stai cercando, e come costruire una pagina che ne mostri un pezzo. NON serve ad accendere o spegnere: per quello c'e' manage-casahomeassistant-domoticandashboard-videocam, che questa rotta completa e non…"
+      description: "Com'e' fatta la casa: quali stanze esistono, cosa c'e' in ognuna, dove sta una cosa che stai cercando, e come costruire una pagina che ne mostri un pezzo. NON serve ad accendere o spegnere: per quello c'e' manage-casahomeassistant-domoticandashboard-videocam, che questa rotta completa e non…"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["stanze", "dispositivi", "cerca", "card-disponibili", "sposta-dispositivo", "crea-stanza", "crea-pagina"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                stanza:
+                  type: string
+                  description: "Obbligatorio per: dispositivi, sposta-dispositivo. Opzionale per: cerca. dispositivi: Id o nome della stanza, come li torna action=stanze. cerca: Cerca solo dentro questa stanza. Vuoto: tutta la casa. sposta-dispositivo: Stanza di destinazione: deve gia' esistere."
+                query:
+                  type: string
+                  description: "Obbligatorio per: cerca. Le parole da cercare. Quelle sotto le tre lettere si scartano: compaiono ovunque e sporcherebbero l'ordine."
+                limit:
+                  type: integer
+                  description: "Opzionale per: cerca. Quanti risultati, al massimo cinquanta."
+                entity_id:
+                  type: string
+                  description: "Opzionale per: card-disponibili. L'entita' di cui si vogliono le card possibili."
+                dispositivo:
+                  type: string
+                  description: "Obbligatorio per: sposta-dispositivo. device_id, oppure un entity_id: in quel caso si risale al dispositivo."
+                nome:
+                  type: string
+                  description: "Obbligatorio per: crea-stanza. Come si chiama."
+                titolo:
+                  type: string
+                  description: "Obbligatorio per: crea-pagina. Titolo della pagina."
+                entita:
+                  type: array
+                  items:
+                    type: string
+                  description: "Obbligatorio per: crea-pagina. Elenco di entity_id, oppure di oggetti {entity_id, card} per scegliere anche l'aspetto. Le card possibili le dice action=card-disponibili."
+  /v1/manage-casahomeassistant-domoticandashboard-videocam:
+    post:
+      operationId: manageCasahomeassistantDomoticandashboardVideocam
+      summary: "Legge e comanda l'impianto di Home Assistant: entita', scene, script, automazioni, telecamere, cronologia e calendari."
+      description: "Legge e comanda l'impianto di Home Assistant: entita', scene, script, automazioni, telecamere, cronologia e calendari. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["get-entities", "search", "control-entity", "get-script", "get-automation", "get-scene", "get-camera-list", "get-camera-screen", "get-assistant-list", "send-command-to-assistant", "get-history", "get-logbook", "get-calendars", "get-calendar-events", "get-shortcode", "discover", "execute", "send-message-home-assistant-agent", "reload"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                page:
+                  type: integer
+                  description: "Opzionale per 7 action. get-entities/search/get-script/get-automation/get-scene/get-camera-list: Pagina da leggere, a partire da 1. discover: Quale pagina di risultati, da 1."
+                limit:
+                  type: integer
+                  description: "Opzionale per 7 action. get-entities/search/get-script/get-automation/get-scene/get-camera-list: Quanti risultati per pagina. discover: Tetto complessivo ai risultati, indipendente dalle pagine."
+                query:
+                  type: string
+                  description: "Obbligatorio per: search. Pezzo di nome da cercare, anche parziale."
+                domain:
+                  type: string
+                  description: "Obbligatorio per: control-entity, execute. control-entity: Il dominio del servizio: light, switch, climate, media_player, cover, scene, script. execute: Il genere di cosa da comandare, per esempio light o switch. E la prima parte dell entity_id, quella prima del punto."
+                service:
+                  type: string
+                  description: "Obbligatorio per: control-entity, execute. control-entity: Il servizio da chiamare: turn_on, turn_off, toggle, set_temperature. execute: Cosa fargli fare, per esempio turn_on o turn_off."
+                entity_id:
+                  type: string
+                  description: "Obbligatorio per: get-camera-screen, get-history, get-calendar-events, get-shortcode. Opzionale per: control-entity, get-logbook, execute. control-entity: L'entita' su cui agire. Si ricava con search. get-camera-screen: La telecamera, es. camera.ingresso. get-history: L'entita' di cui leggere la storia. get-logbook: Limita il diario a una sola entita'. get-calendar-events: Il calendario, es. calendar.famiglia. get-shortcode: L'entita' da mostrare. execute: Su quale cosa preciso agire, come lo restituisce discover. Senza, il comando vale per tutto il dominio: e il modo di spegnere per sbaglio ogni luce della casa."
+                payload:
+                  type: object
+                  description: "Opzionale per: control-entity. Dati aggiuntivi per il servizio."
+                text:
+                  type: string
+                  description: "Obbligatorio per: send-command-to-assistant, send-message-home-assistant-agent. send-command-to-assistant: La frase da dire all'assistente. send-message-home-assistant-agent: La frase da dire allassistente."
+                agent_id:
+                  type: string
+                  description: "Opzionale per: send-command-to-assistant, send-message-home-assistant-agent. send-command-to-assistant: Quale assistente, se ce n'e' piu' d'uno. send-message-home-assistant-agent: Quale assistente, se ce ne e piu di uno. Si trovano con discover chiedendo type assistants."
+                start:
+                  type: string
+                  description: "Opzionale per: get-history, get-logbook, get-calendar-events. Inizio del periodo, in formato ISO 8601."
+                end:
+                  type: string
+                  description: "Opzionale per: get-history, get-logbook, get-calendar-events. Fine del periodo, in formato ISO 8601."
+                columns:
+                  type: integer
+                  description: "Opzionale per: get-shortcode. Su quante colonne disporla."
+                type:
+                  type: string
+                  description: "Opzionale per: discover. Che genere di cose elencare: all tutto, entities i dispositivi, scripts gli script, automations le automazioni, assistants gli assistenti vocali."
+                entities:
+                  type: string
+                  description: "Opzionale per: discover. Restringe a identificativi precisi, separati da virgola."
+                per_page:
+                  type: integer
+                  description: "Opzionale per: discover. Quanti risultati per pagina, al massimo 100."
+                data:
+                  type: object
+                  description: "Opzionale per: execute. Dettagli in piu per il servizio, per esempio la luminosita o il colore."
+                conversation_id:
+                  type: string
+                  description: "Opzionale per: send-message-home-assistant-agent. Il filo di una conversazione gia cominciata, per farsi capire quando la frase si riferisce a quella prima."
+  /v1/manage-credentials-rotation-refresh-token:
+    post:
+      operationId: manageCredentialsRotationRefreshToken
+      summary: "Rinnova le credenziali di questo sito usando la chiave di rinnovo. Si usa proprio quando il codice utente non vale piu', quindi non ne chiede uno."
+      description: "Rinnova le credenziali di questo sito usando la chiave di rinnovo. Si usa proprio quando il codice utente non vale piu', quindi non ne chiede uno. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["chiedi-rotazione", "riprendi-credenziale", "stato"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                genere:
+                  type: string
+                  enum: ["user_code", "header", "parametro"]
+                  description: "Obbligatorio per tutte le action. Quale credenziale. Il bearer non si tratta da qui: si rigenera dalla bacheca del sito."
+                chiave:
+                  type: string
+                  description: "Obbligatorio per tutte le action. La chiave di rinnovo di quel genere, quella che il sito ti ha consegnato quando vi siete collegati."
+  /v1/manage-page-with-user-code:
+    post:
+      operationId: managePageWithUserCode
+      summary: "Crea e modifica le pagine del sito, ne governa il modello di impaginazione, i menu e quale pagina fa da pagina iniziale."
+      description: "Crea e modifica le pagine del sito, ne governa il modello di impaginazione, i menu e quale pagina fa da pagina iniziale. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["retrieve", "create-page", "update-page", "get-homepage", "set-homepage", "view-menu", "update-menu", "get-template", "manage-template"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                page_id:
+                  type: integer
+                  description: "Obbligatorio per: retrieve, set-homepage, view-menu, update-menu, get-template, manage-template. Id della pagina."
+                chunk_index:
+                  type: integer
+                  description: "Opzionale per: retrieve. Quale pezzo leggere, per le pagine troppo lunghe per stare in una risposta sola."
+                title:
+                  type: string
+                  description: "Opzionale per: create-page, update-page. Il titolo della pagina."
+                content:
+                  type: string
+                  description: "Opzionale per: create-page, update-page. Il contenuto della pagina, in HTML."
+                excerpt:
+                  type: string
+                  description: "Opzionale per: create-page, update-page. Il riassunto della pagina."
+                status:
+                  type: string
+                  description: "Opzionale per: create-page, update-page. Se pubblicarla o tenerla in bozza: publish la rende visibile a chiunque visiti il sito."
+                slug:
+                  type: string
+                  description: "Opzionale per: create-page, update-page. Il pezzo finale dell indirizzo. Cambiandolo su una pagina gia pubblicata, i collegamenti vecchi smettono di funzionare."
+                featured_image:
+                  type: string
+                  description: "Opzionale per: create-page, update-page. L immagine di copertina."
+                seo_title:
+                  type: string
+                  description: "Opzionale per: create-page, update-page. Il titolo mostrato nei risultati di ricerca."
+                meta_description:
+                  type: string
+                  description: "Opzionale per: create-page, update-page. Il riassunto mostrato nei risultati di ricerca."
+                focus_keywords:
+                  type: string
+                  description: "Opzionale per: create-page, update-page. Le parole su cui la pagina punta a farsi trovare."
+                id:
+                  type: integer
+                  description: "Obbligatorio per: update-page. Id della pagina."
+                menu_data:
+                  type: object
+                  description: "Obbligatorio per: update-menu. La struttura nuova del menu, che prende il posto di quella di prima. Conviene ricavarla da view-menu e cambiarne solo quello che serve."
+                template_name:
+                  type: string
+                  description: "Obbligatorio per: manage-template. Il modello da usare, fra quelli che il tema mette a disposizione. Un nome che il tema non conosce non funziona."
+  /v1/route-scheduler:
+    post:
+      operationId: routeScheduler
+      summary: "Programma chiamate ad altre rotte di questo sito perche avvengano piu tardi, una volta sola o a ripetizione, e ne segue lesito."
+      description: "Programma chiamate ad altre rotte di questo sito perche avvengano piu tardi, una volta sola o a ripetizione, e ne segue lesito. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["list_jobs", "add_job", "remove_job", "run_job", "get_log", "set_logging"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                page:
+                  type: integer
+                  description: "Opzionale per: list_jobs, get_log. list_jobs: Quale pagina di risultati, da 1. get_log: Quale pagina di righe, da 1."
+                per_page:
+                  type: integer
+                  description: "Opzionale per: list_jobs, get_log. list_jobs: Quanti lavori per pagina, al massimo 100. get_log: Quante righe per pagina, al massimo 500."
+                status:
+                  type: string
+                  description: "Opzionale per: list_jobs. Restringe a uno stato, per esempio active."
+                search:
+                  type: string
+                  description: "Opzionale per: list_jobs, get_log. list_jobs: Cerca nel nome del lavoro e dentro la sua definizione, quindi trova anche per rotta chiamata. get_log: Tiene solo le righe che contengono questo testo. Maiuscole e minuscole non contano."
+                job_key:
+                  type: string
+                  description: "Obbligatorio per: add_job, remove_job, run_job, get_log. Opzionale per: list_jobs. list_jobs: Restringe a un lavoro solo. add_job/remove_job/run_job/get_log: La chiave del lavoro, quella scelta con add_job. Serve a ritrovarlo: conviene un nome che dica cosa fa."
+                definition:
+                  type: object
+                  description: "Obbligatorio per: add_job. Cosa fare: target_route, obbligatorio, il percorso REST relativo da chiamare, per esempio /wp-gpt/v1/rotta - un indirizzo completo viene rifiutato; payload, i parametri da mandare; schedule, quando e ogni quanto; headers, intestazioni in piu."
+                logging:
+                  type: boolean
+                  description: "Obbligatorio per: set_logging. Vero per scrivere il registro, falso per smettere."
+  /v1/ssh-connection:
+    post:
+      operationId: sshConnection
+      summary: "Si collega a un server via SSH ed esegue un comando, restituendo quello che il server risponde."
+      description: "Si collega a un server via SSH ed esegue un comando, restituendo quello che il server risponde. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["ssh-connection", "get_ssh_connection_response_list_in_chunk", "get_ssh_connection_single_response_in_chunk", "delete_ssh_connection_transients"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                host:
+                  type: string
+                  description: "Obbligatorio per: ssh-connection. Indirizzo del server a cui collegarsi."
+                port:
+                  type: integer
+                  description: "Obbligatorio per: ssh-connection. Porta SSH del server, di solito 22."
+                username:
+                  type: string
+                  description: "Obbligatorio per: ssh-connection. Utente con cui entrare."
+                password:
+                  type: string
+                  description: "Opzionale per: ssh-connection. Password dell utente. Alternativa a private_key: meglio la chiave, cosi la password non viaggia nella chiamata."
+                private_key:
+                  type: string
+                  description: "Opzionale per: ssh-connection. Chiave privata per entrare senza password."
+                private_key_passphrase:
+                  type: string
+                  description: "Opzionale per: ssh-connection. Frase che sblocca la chiave privata, se ne ha una."
+                command:
+                  type: string
+                  description: "Obbligatorio per: ssh-connection. Il comando da eseguire sul server."
+                transient_key:
+                  type: string
+                  description: "Obbligatorio per: get_ssh_connection_single_response_in_chunk. Opzionale per: get_ssh_connection_response_list_in_chunk. get_ssh_connection_response_list_in_chunk: La chiave della risposta da riprendere. get_ssh_connection_single_response_in_chunk: La chiave della risposta, restituita dalla chiamata che era stata troncata."
+                chunk_index:
+                  type: integer
+                  description: "Obbligatorio per: get_ssh_connection_single_response_in_chunk. Opzionale per: get_ssh_connection_response_list_in_chunk. get_ssh_connection_response_list_in_chunk: Quale pezzo dell elenco leggere, da 0. get_ssh_connection_single_response_in_chunk: Quale pezzo leggere, da 0."
+  /v1/ssh-connection-advanced-command:
+    post:
+      operationId: sshConnectionAdvancedCommand
+      summary: "Lavora sui file di un server via SSH: legge, scrive, carica, cambia permessi e proprietario, esegue script."
+      description: "Lavora sui file di un server via SSH: legge, scrive, carica, cambia permessi e proprietario, esegue script. Un solo endpoint con tante action: il parametro action decide quali altri parametri servono."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: ["list-directory", "read-file", "create-file", "append-to-file", "delete-file", "upload-file-to-path", "create-script-sh", "execute-script", "custom-command", "chmod", "chown"]
+                  description: "Quale operazione eseguire: decide quali altri parametri servono. I valori ammessi sono quelli elencati in enum. Per sapere cosa vuole una singola operazione chiama questa stessa rotta con action=documentazione_<nome-action>."
+                host:
+                  type: string
+                  description: "Obbligatorio per tutte le action. Indirizzo del server a cui collegarsi."
+                port:
+                  type: integer
+                  description: "Obbligatorio per tutte le action. Porta SSH del server, di solito 22."
+                username:
+                  type: string
+                  description: "Obbligatorio per tutte le action. Utente con cui entrare."
+                password:
+                  type: string
+                  description: "Opzionale per tutte le action. Password dell utente. Alternativa a private_key: meglio la chiave, cosi la password non viaggia nella chiamata."
+                private_key:
+                  type: string
+                  description: "Opzionale per tutte le action. Chiave privata per entrare senza password."
+                private_key_passphrase:
+                  type: string
+                  description: "Opzionale per tutte le action. Frase che sblocca la chiave privata, se ne ha una."
+                directory:
+                  type: string
+                  description: "Obbligatorio per: list-directory. La cartella da guardare, con il percorso completo."
+                filepath:
+                  type: string
+                  description: "Obbligatorio per 9 action su 11. read-file: Percorso completo del file. create-file: Dove creare il file. append-to-file/chmod/chown: Il file. delete-file: Il file da cancellare. upload-file-to-path: Dove metterlo. create-script-sh: Dove creare lo script. execute-script: Lo script da eseguire."
+                content:
+                  type: string
+                  description: "Obbligatorio per: create-file, append-to-file, create-script-sh. Opzionale per: upload-file-to-path. create-file: Cosa scriverci dentro. append-to-file: Cosa aggiungere. upload-file-to-path: Il contenuto da caricare. create-script-sh: Il contenuto dello script."
+                command:
+                  type: string
+                  description: "Obbligatorio per: custom-command. Il comando da eseguire."
+                permissions:
+                  type: string
+                  description: "Obbligatorio per: chmod. I permessi da mettere, nella forma numerica come 644."
+                owner:
+                  type: string
+                  description: "Opzionale per: chown. Il nuovo proprietario."
+                group:
+                  type: string
+                  description: "Opzionale per: chown. Il nuovo gruppo."

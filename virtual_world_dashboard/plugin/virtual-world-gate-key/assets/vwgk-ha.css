@@ -1,0 +1,631 @@
+/* Stili Base per Container e Layout Responsivo */
+.vwgk-ha-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.vwgk-ha-container h3 {
+    margin-top: 0;
+    margin-bottom: 1.2rem;
+    color: #1a1a1a;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.vwgk-ha-refresh-btn {
+    background-color: #03a9f4;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.vwgk-ha-refresh-btn:hover {
+    background-color: #0288d1;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+}
+
+.vwgk-ha-refresh-btn:active {
+    transform: translateY(0);
+}
+
+.vwgk-ha-refresh-btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Griglia Home Assistant Style */
+.vwgk-ha-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--ha-cols, 1), 1fr);
+    gap: 16px;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 900px) {
+    .vwgk-ha-grid {
+        grid-template-columns: repeat(min(var(--ha-cols, 1), 2), 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .vwgk-ha-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Card Stile Home Assistant */
+.vwgk-ha-card {
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 100px;
+    position: relative;
+    overflow: hidden;
+}
+
+.vwgk-ha-card:hover {
+    background: #ffffff;
+    border-color: #03a9f4;
+    box-shadow: 0 4px 12px rgba(3, 169, 244, 0.1);
+}
+
+.vwgk-ha-card[data-state="on"] {
+    background: #fff;
+}
+
+.vwgk-ha-card-content {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.vwgk-ha-card-icon {
+    font-size: 24px;
+    margin-right: 12px;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.vwgk-ha-card[data-state="on"] .vwgk-ha-card-icon {
+    background: #fff59d;
+    color: #fbc02d;
+}
+
+.vwgk-ha-card-info {
+    flex: 1;
+}
+
+.vwgk-ha-card-name {
+    font-weight: 500;
+    font-size: 15px;
+    color: #333;
+    line-height: 1.2;
+}
+
+.vwgk-ha-card-state {
+    font-size: 13px;
+    color: #777;
+    margin-top: 2px;
+    text-transform: capitalize;
+}
+
+.vwgk-ha-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-top: 1px solid rgba(0,0,0,0.03);
+    padding-top: 10px;
+}
+
+/* Home Assistant Switch (Toggle) */
+.vwgk-ha-switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+}
+
+.vwgk-ha-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.vwgk-ha-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.vwgk-ha-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .vwgk-ha-slider {
+    background-color: #03a9f4;
+}
+
+input:focus + .vwgk-ha-slider {
+    box-shadow: 0 0 1px #03a9f4;
+}
+
+input:checked + .vwgk-ha-slider:before {
+    transform: translateX(22px);
+}
+
+/* Pulsante Esegui */
+.vwgk-ha-btn-execute {
+    background: #eee;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.vwgk-ha-btn-execute:hover {
+    background: #e0e0e0;
+}
+
+.vwgk-ha-btn-execute:active {
+    background: #d0d0d0;
+}
+
+/* Loading Overlay inside Grid */
+.vwgk-ha-loading {
+    position: relative;
+    min-height: 100px;
+}
+
+.vwgk-ha-loading::after {
+    content: "Caricamento...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #999;
+    font-style: italic;
+}
+
+/* Interfaccia Chat JS */
+.vwgk-ha-chat-wrapper {
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+}
+
+.vwgk-ha-chat-box {
+    height: 350px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 1.2rem;
+    overflow-y: auto;
+    margin-bottom: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.vwgk-ha-chat-msg {
+    padding: 10px 16px;
+    border-radius: 18px;
+    max-width: 85%;
+    font-size: 15px;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.vwgk-ha-chat-user {
+    align-self: flex-end;
+    background-color: #03a9f4;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+.vwgk-ha-chat-bot {
+    align-self: flex-start;
+    background-color: #f1f1f1;
+    color: #222;
+    border-bottom-left-radius: 4px;
+}
+
+.vwgk-ha-chat-input-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+#vwgk-ha-chat-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+}
+
+#vwgk-ha-chat-input:focus {
+    border-color: #03a9f4;
+    outline: none;
+}
+
+#vwgk-ha-chat-send {
+    background-color: #03a9f4;
+    color: #fff;
+    border: none;
+    padding: 0 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+#vwgk-ha-chat-send:hover {
+    background-color: #0288d1;
+}
+
+/* --- Media Player Controls --- */
+.vwgk-ha-media-ctrl {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.vwgk-ha-btn-media {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    padding: 0;
+}
+
+.vwgk-ha-btn-media:hover {
+    transform: scale(1.1);
+}
+
+.vwgk-ha-btn-play {
+    font-size: 32px;
+}
+
+.vwgk-ha-media-track {
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+    margin-top: 5px;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- Camera Stream --- */
+.vwgk-ha-camera-stream {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: block;
+    object-fit: cover;
+}
+
+/* Dynamic Climate Extras */
+.vwgk-ha-climate-ui {
+    display: flex;
+    flex-direction: column;
+}
+
+.vwgk-ha-margin-b {
+    margin-bottom: 15px;
+}
+
+.vwgk-ha-btn-mode--active {
+    background: #03a9f4 !important;
+    color: #fff !important;
+    border-color: transparent !important;
+    box-shadow: 0 2px 8px rgba(3, 169, 244, 0.4);
+}
+
+.vwgk-ha-extra-ctrls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.vwgk-ha-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f1f3f5;
+    padding: 6px 12px;
+    border-radius: 8px;
+    flex: 1;
+    min-width: 140px;
+}
+
+.vwgk-ha-select-wrapper .dashicons {
+    color: #03a9f4;
+    font-size: 18px;
+}
+
+.vwgk-ha-select {
+    background: transparent !important;
+    border: none !important;
+    font-size: 13px !important;
+    color: #333 !important;
+    padding: 0 !important;
+    width: 100%;
+    cursor: pointer;
+}
+
+.vwgk-ha-select:focus {
+    box-shadow: none !important;
+}
+
+.vwgk-ha-select option {
+    background: #fff;
+    color: #333;
+    padding: 10px;
+}
+
+/* Power Toggle Area */
+.vwgk-ha-power-row {
+    background: rgba(0, 0, 0, 0.03);
+    padding: 8px 12px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Info Button */
+.vwgk-ha-info-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.vwgk-ha-info-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+/* Glassmorphism Modal */
+#vwgk-ha-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    transition: opacity 0.3s ease;
+}
+
+.vwgk-ha-modal-hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.vwgk-ha-modal-content {
+    background: rgba(255, 255, 255, 0.9);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.vwgk-ha-modal-header {
+    padding: 20px;
+    background: #03a9f4;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vwgk-ha-modal-header h4 {
+    margin: 0;
+    font-size: 18px;
+}
+
+#vwgk-ha-modal-close {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.vwgk-ha-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.vwgk-ha-details-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.vwgk-ha-details-table th, .vwgk-ha-details-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.vwgk-ha-details-table th {
+    font-weight: 600;
+    color: #666;
+    width: 35%;
+}
+
+.vwgk-ha-details-table td {
+    color: #333;
+    word-break: break-all;
+    font-family: monospace;
+}
+
+/* Single Column Optimization */
+.vwgk-ha-grid[style*="--ha-cols: 1"] .vwgk-ha-card {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 24px;
+}
+
+.vwgk-ha-grid[style*="--ha-cols: 1"] .vwgk-ha-card-content {
+    margin-bottom: 0;
+    margin-right: 24px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.vwgk-ha-grid[style*="--ha-cols: 1"] .vwgk-ha-card-controls {
+    flex: 2;
+    min-width: 300px;
+}
+
+.vwgk-ha-grid[style*="--ha-cols: 1"] .vwgk-ha-card-submit-area {
+    width: 100%;
+    margin-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+/* --- Submit Area & Validation --- */
+.vwgk-ha-card-submit-area {
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 15px;
+    margin-top: 10px;
+    border-top: 1px dashed rgba(0,0,0,0.1);
+    animation: vwgkFadeIn 0.3s ease;
+}
+
+.vwgk-ha-card--dirty .vwgk-ha-card-submit-area {
+    display: flex;
+}
+
+.vwgk-ha-pending-label {
+    font-size: 11px;
+    color: #f57c00;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.vwgk-ha-btn-submit {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.vwgk-ha-btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+}
+
+.vwgk-ha-btn-submit:active {
+    transform: translateY(0);
+}
+
+/* Dirty State Glow & Pulse */
+.vwgk-ha-card--dirty {
+    border-color: #ffb74d !important;
+    box-shadow: 0 0 20px rgba(255, 183, 77, 0.3) !important;
+}
+
+.vwgk-ha-card--dirty .vwgk-ha-btn-submit {
+    animation: vwgkPulseGreen 2s infinite;
+}
+
+@keyframes vwgkPulseGreen {
+    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+@keyframes vwgkFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

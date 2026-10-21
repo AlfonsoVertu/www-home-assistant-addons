@@ -1,0 +1,57 @@
+name: "Virtual World Dashboard"
+description: "WordPress-based middleware gateway between AI (GPTs) and Home Assistant."
+version: "1.0.5"
+slug: "virtual_world_dashboard"
+init: false
+arch:
+  - aarch64
+  - amd64
+startup: services
+boot: auto
+map:
+  - config:rw
+  - share:rw
+options:
+  db_host: "core-mariadb"
+  db_name: "wordpress"
+  db_user: "wordpress"
+  db_pass: ""
+  wp_domain: ""
+  wp_site_title: "Virtual World Gateway"
+  wp_admin_user: "admin"
+  wp_admin_password: "CHANGEME"
+  wp_admin_email: "admin@example.com"
+  ha_auth_mode: "supervisor_proxy"
+  ha_url: "http://homeassistant:8123"
+  ha_long_lived_token: ""
+  vwgk_api_key: "my_gateway_secret"
+  wp_gpt_license_key: ""
+  user_code: ""
+  token_api: ""
+  eclipse_url: "http://local-eclipse-finder:8099"
+  eclipse_api_key: ""
+schema:
+  db_host: str
+  db_name: str
+  db_user: str
+  db_pass: password
+  wp_domain: str
+  wp_site_title: str
+  wp_admin_user: str
+  wp_admin_password: password
+  wp_admin_email: str
+  ha_auth_mode: list(supervisor_proxy|long_lived_token)
+  ha_url: str
+  ha_long_lived_token: password?
+  vwgk_api_key: password
+  wp_gpt_license_key: str?
+  user_code: str?
+  token_api: str?
+  eclipse_url: str?
+  eclipse_api_key: password?
+ports:
+  80/tcp: 8081
+ports_description:
+  80/tcp: WordPress Gateway Interface
+panel_icon: "mdi:wordpress"
+panel_title: "VW Dashboard"

@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "WWWW MediaUploader",
+  "description": "Upload immagini via /wp-json/wp-gpt/v1/manage-file usando chunk base64 e orchestrazione contenuti.",
+  "version": "1.0.0",
+  "action": {
+    "default_title": "WWWW MediaUploader",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": ["storage"],
+  "optional_host_permissions": ["https://*/*", "http://*/*"],
+  "icons": {
+    "16": "icons/icon16.svg",
+    "32": "icons/icon32.svg",
+    "48": "icons/icon48.svg",
+    "128": "icons/icon128.svg"
+  }
+}

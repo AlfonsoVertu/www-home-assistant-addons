@@ -1,0 +1,4 @@
+# Non spedire nel build context il sorgente del plugin Pro (non usato nel container)
+plugin/wp-gpt-automation-pro/
+**/.git
+**/*.log
