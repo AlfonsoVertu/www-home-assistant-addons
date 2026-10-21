@@ -1,0 +1,4 @@
+# Tag verificato nel registro Docker Hub il 22/10/2026 (linux/amd64 e linux/arm64).
+build_from:
+  amd64: vaultwarden/server:1.37.4
+  aarch64: vaultwarden/server:1.37.4

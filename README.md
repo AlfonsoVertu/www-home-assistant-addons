@@ -25,11 +25,12 @@ Oppure usa il browser **Another Wilde Web** ([workingwithweb.eu/another-wilde-we
 | [EuroOffice](eurooffice/DOCS.md) | Il server dei documenti (basato su ONLYOFFICE) per scrivere insieme testi, fogli e presentazioni. |
 | [BentoPDF](bentopdf/DOCS.md) | Tutti gli strumenti PDF nel browser; i file non lasciano il tuo dispositivo. |
 | [Open WebUI](open_webui/DOCS.md) | La chat coi modelli di intelligenza artificiale (Ollama, llama.cpp, servizi compatibili OpenAI). |
+| [Vaultwarden (Bitwarden)](vaultwarden/DOCS.md) | La cassaforte delle password, compatibile con l'estensione e le app Bitwarden. HTTPS con Nginx Proxy Manager. |
 
 Gli add-on si costruiscono sul tuo Home Assistant dal loro Dockerfile: quello che installi è esattamente il codice di questo repository.
 
 ## Licenze
-Ogni add-on segue la licenza del programma che contiene: Nextcloud (AGPL-3.0), ONLYOFFICE/EuroOffice (AGPL-3.0), Nginx Proxy Manager (MIT), BentoPDF (AGPL-3.0), Open WebUI (la sua licenza, col marchio visibile), WordPress (GPL-2.0+). **WP GPT Automation Free**, il tema e i plugin di Working With Web sono di Alfonso Vertucci — Working With Web: liberi da usare in Home Assistant, vedi le note nei loro file.
+Ogni add-on segue la licenza del programma che contiene: Nextcloud (AGPL-3.0), ONLYOFFICE/EuroOffice (AGPL-3.0), Nginx Proxy Manager (MIT), BentoPDF (AGPL-3.0), Open WebUI (la sua licenza, col marchio visibile), Vaultwarden (AGPL-3.0), WordPress (GPL-2.0+). **WP GPT Automation Free**, il tema e i plugin di Working With Web sono di Alfonso Vertucci — Working With Web: liberi da usare in Home Assistant, vedi le note nei loro file.
 
 ---
 Fatto da [Working With Web](https://workingwithweb.it/webagency/).

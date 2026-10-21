@@ -1,0 +1,26 @@
+name: "Vaultwarden (Bitwarden)"
+description: "La cassaforte delle password sul tuo Home Assistant, compatibile con le app e l'estensione Bitwarden."
+version: "1.37.4"
+slug: "vaultwarden"
+url: "https://github.com/AlfonsoVertu/www-home-assistant-addons/tree/main/vaultwarden"
+init: false
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: auto
+# /data è montata e conservata automaticamente dal Supervisor.
+ports:
+  80/tcp: 8097
+ports_description:
+  80/tcp: Vaultwarden (HTTP locale, usare HTTPS tramite proxy)
+webui: "http://[HOST]:[PORT:80]/"
+panel_icon: "mdi:shield-key"
+options:
+  signups_allowed: false
+  admin_token: ""
+  domain: ""
+schema:
+  signups_allowed: bool
+  admin_token: password?
+  domain: str?
