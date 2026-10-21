@@ -3,7 +3,7 @@
 Plugin Name: WP GPT Automation Free
 Plugin URI: https://workingwithweb.it/webagency
 Description: Plugin per gestire WordPress tramite GPT con API sicure. Versione Free - limitata alle funzioni base e integrazione Home Assistant.
-Version: 1.3.2
+Version: 1.3.3
 Author: Alfonso Vertucci
 Author URI: https://workingwithweb.it/webagency
 License: Proprietary (Comodato d'uso gratuito controllato)
@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) {
     exit; // Evita l'accesso diretto.
 }
 
-define('WP_GPT_VERSION', '1.3.2');
+define('WP_GPT_VERSION', '1.3.3');
 define('WP_GPT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('WP_GPT_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WP_GPT_CHUNK_SIZE', 2000);
@@ -83,7 +83,7 @@ require_once WP_GPT_PLUGIN_DIR . 'includes/class-wp-gpt-webpage-and-twitter-scra
 \WGA_Scraping_Pagina_E_Twitter::init();
 
 // Guide e Schema UI
-require_once WP_GPT_PLUGIN_DIR . 'includes/class-wp-gpt-guide-categories.php';
+require_once WP_GPT_PLUGIN_DIR . 'includes/class-wp-gpt-guide-categories.php';
 require_once WP_GPT_PLUGIN_DIR . 'includes/class-wp-gpt-schema-guide.php';
 require_once WP_GPT_PLUGIN_DIR . 'includes/class-wp-gpt-generate-schema.php';
 
@@ -187,7 +187,7 @@ function wp_gpt_automation_free_init() {
     // che ne registrava una seconda col nome vecchio: quella classe ora e' solo il
     // gestore a cui smista() passa le azioni, e di init() non ne ha piu'.
 
-    // Inizializza Schema & Guide UI
+    // Inizializza Schema & Guide UI
     WP_GPT_Schema_Guide::init();
 }
 add_action('plugins_loaded', 'WP_GPT_Automation_Pro\wp_gpt_automation_free_init');
